@@ -5,19 +5,12 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { MobileTabBar } from "@/components/MobileTabBar";
-import { HeartIcon } from "@/components/icons";
+import { HeartIcon, ShieldIcon } from "@/components/icons";
+import type { Listing } from "@/data/listings";
 
-const FEATURES = [
-  "Podno grejanje",
-  "Terasa",
-  "Lift",
-  "Parking mesto",
-  "Klima uređaj",
-  "Nameštaj",
-];
-
-export default function ListingPage() {
-  const [fav, setFav] = useState(false);
+export function ListingDetail({ listing }: { listing: Listing }) {
+  const [fav, setFav] = useState(!!listing.fav);
+  const { detail } = listing;
 
   return (
     <div>
@@ -51,7 +44,7 @@ export default function ListingPage() {
               <path d="M4 11.5 12 4l8 7.5" />
               <path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9" />
             </svg>
-            <div className="gallery-more-overlay">+15 foto</div>
+            <div className="gallery-more-overlay">+{Math.max(listing.photos - 2, 0)} foto</div>
           </div>
         </div>
         <div className="gallery-actions">
@@ -72,55 +65,52 @@ export default function ListingPage() {
       <div className="wrap listing-body">
         <div>
           <div className="listing-kicker">
-            <span className="type">Stan na prodaju</span>
-            <svg viewBox="0 0 24 24" width={15} height={15} fill="none" stroke="#D6417F" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 3l7 3v5c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6l7-3z" />
-              <path d="M9 12l2 2 4-4" />
-            </svg>
-            <span className="verified">Verifikovan oglas</span>
+            <span className="type">{detail.kicker}</span>
+            {listing.verified && (
+              <>
+                <ShieldIcon size={15} />
+                <span className="verified">Verifikovan oglas</span>
+              </>
+            )}
           </div>
-          <h1 className="listing-title">Svetao dvosoban stan sa terasom</h1>
+          <h1 className="listing-title">{listing.title}</h1>
           <div className="listing-addr">
             <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" />
               <circle cx={12} cy={9} r={2.4} />
             </svg>
-            Njegoševa 18, Vračar, Beograd
+            {detail.fullAddress}
           </div>
 
           <div className="stat-row">
             <div className="stat-item">
-              <strong>64 m²</strong>
+              <strong>{listing.area}</strong>
               <span>Površina</span>
             </div>
             <div className="stat-item">
-              <strong>2</strong>
+              <strong>{listing.beds}</strong>
               <span>Sobe</span>
             </div>
             <div className="stat-item">
-              <strong>1</strong>
+              <strong>{listing.baths}</strong>
               <span>Kupatilo</span>
             </div>
             <div className="stat-item">
-              <strong>3/6</strong>
+              <strong>{detail.floor}</strong>
               <span>Sprat</span>
             </div>
             <div className="stat-item">
-              <strong>2018.</strong>
+              <strong>{detail.yearBuilt}</strong>
               <span>Godina gradnje</span>
             </div>
           </div>
 
           <h2>O nekretnini</h2>
-          <p className="desc">
-            Svetao i funkcionalan dvosoban stan u srcu Vračara, u mirnoj ulici na par minuta od
-            parka. Kompletno renoviran 2022. godine, sa novom stolarijom i podnim grejanjem u
-            kupatilu. Prostrana terasa gleda na unutrašnje dvorište.
-          </p>
+          <p className="desc">{detail.description}</p>
 
           <h2>Karakteristike</h2>
           <div className="feature-list">
-            {FEATURES.map((feature) => (
+            {detail.features.map((feature) => (
               <div key={feature} className="feature-item">
                 <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="#D6417F" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12l4 4L19 6" />
@@ -141,14 +131,14 @@ export default function ListingPage() {
 
         <div>
           <div className="sidebar-card">
-            <div className="sidebar-price">€189.000</div>
-            <div className="sidebar-permsqm">≈ €2.953 / m²</div>
+            <div className="sidebar-price">{listing.price}</div>
+            <div className="sidebar-permsqm">{detail.pricePerArea}</div>
 
             <div className="agent-row">
-              <div className="agent-avatar">MJ</div>
+              <div className="agent-avatar">{detail.agentInitials}</div>
               <div>
-                <div className="agent-name">Milica Jovanović</div>
-                <div className="agent-role">Agent za nekretnine</div>
+                <div className="agent-name">{detail.agentName}</div>
+                <div className="agent-role">{detail.agentRole}</div>
               </div>
             </div>
 

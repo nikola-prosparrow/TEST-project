@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Listing } from "@/data/listings";
 import {
   HeartIcon,
@@ -16,13 +17,17 @@ export function ListingCard({ listing }: { listing: Listing }) {
   const [fav, setFav] = useState(!!listing.fav);
 
   return (
-    <div className="card">
+    <Link href={`/listing/${listing.id}`} className="card">
       <div className="card-photo">
         <HouseIcon />
         <button
           className="heart-btn"
           aria-label="Sačuvaj oglas"
-          onClick={() => setFav((prev) => !prev)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setFav((prev) => !prev);
+          }}
         >
           <HeartIcon active={fav} />
         </button>
@@ -53,6 +58,6 @@ export function ListingCard({ listing }: { listing: Listing }) {
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
