@@ -38,18 +38,48 @@ export const roadmapNow: RoadmapItem[] = [
   {
     id: "M5",
     title: "Realan kontakt vlasnika",
-    description: "Dugmad \"Pošalji poruku\" / \"Prikaži broj telefona\" trenutno ne rade — treba da stvarno dostave poruku ili broj.",
+    description: "\"Pošalji poruku\"/\"Zakaži razgledanje\" upisuju poruku u bazu, vlasnik je vidi u /moj-nalog (S4). \"Prikaži broj telefona\" čita telefon iz vlasnikovog profila (unosi se pri postavljanju oglasa). Bez email notifikacija za sada (dogovoreno, AD8).",
     jtbd: ["Kupac #3", "Prodavac #2"],
+    done: true,
+  },
+  {
+    id: "M6",
+    title: "Prava adresa i mapa",
+    description: "Geokodiranje unete adrese (OpenStreetMap Nominatim) pri postavljanju oglasa, čuvanje lat/lng, prikaz približne lokacije na mapi (Leaflet) na stranici oglasa. Ako geokodiranje ne uspe, oglas se ipak objavljuje bez pina (best-effort, ne blokira).",
+    jtbd: ["Kupac #2"],
+    done: true,
+  },
+  {
+    id: "UI1",
+    title: "Konzistentan header",
+    description: "\"Postavi oglas\" je sad uvek vidljivo na svakoj stranici, nav linkovi imaju white-space: nowrap, email se skraćuje umesto da lomi layout, 'Izdavanje'/'Prodaj / izdaj' sad vode na prave rute.",
+    jtbd: ["Prodavac #1"],
+    done: true,
+  },
+  {
+    id: "S1",
+    title: "Upload pravih fotografija",
+    description: "Upload preko Supabase Storage (bucket 'listing-photos', do 8 po oglasu), prikaz u galeriji na kartici i stranici oglasa.",
+    jtbd: ["Kupac #2"],
+    done: true,
+  },
+  {
+    id: "S3",
+    title: "Trajno sačuvani oglasi",
+    description: "Heart dugme sad zove Server Action i upisuje/briše red u favorites tabeli, vezano za nalog. /sacuvano prikazuje listu.",
+    jtbd: ["Kupac #4"],
+    done: true,
+  },
+  {
+    id: "S4",
+    title: "Dashboard vlasnika",
+    description: "/moj-nalog prikazuje sopstvene postavljene oglase i primljene poruke (iz M5) na jednom mestu.",
+    jtbd: ["Prodavac #3"],
+    done: true,
   },
 ];
 
 export const roadmapNext: RoadmapItem[] = [
-  {
-    id: "S1",
-    title: "Upload pravih fotografija",
-    description: "Galerija oglasa je trenutno placeholder ikonica. Treba upload + prikaz pravih slika.",
-    jtbd: ["Kupac #2"],
-  },
   {
     id: "S2",
     title: "Verifikacija oglasa",
@@ -57,21 +87,9 @@ export const roadmapNext: RoadmapItem[] = [
     jtbd: ["Kupac #2"],
   },
   {
-    id: "S3",
-    title: "Trajno sačuvani oglasi",
-    description: "Heart dugme trenutno čuva stanje samo u React state-u — nestaje na refresh. Treba vezati za nalog.",
-    jtbd: ["Kupac #4"],
-  },
-  {
-    id: "S4",
-    title: "Dashboard vlasnika",
-    description: "Pregled sopstvenih oglasa i broja pregleda/interesovanja po oglasu.",
-    jtbd: ["Prodavac #3"],
-  },
-  {
     id: "S5",
-    title: "In-app poruke",
-    description: "Thread poruka između kupca i vlasnika, ne samo dugme bez funkcije.",
+    title: "In-app poruke (dvosmerni thread)",
+    description: "M5 daje jednosmernu poruku kupac→vlasnik vidljivu u dashboard-u. S5 dodaje odgovore, thread po oglasu, i notifikacije o novim porukama.",
     jtbd: ["Prodavac #2", "Kupac #3"],
   },
 ];
@@ -86,7 +104,7 @@ export const roadmapLater: RoadmapItem[] = [
   {
     id: "C2",
     title: "Mapa pretraga",
-    description: "Vizuelna pretraga po lokaciji umesto samo liste gradova.",
+    description: "Vizuelna pretraga po lokaciji (klaster pinova na mapi) umesto liste gradova — nadgradnja na lat/lng podatke iz M6.",
     jtbd: ["Kupac #1"],
   },
   {

@@ -7,6 +7,7 @@ const TABS = [
   {
     key: "home",
     label: "Početna",
+    href: "/",
     path: (
       <>
         <path d="M4 11.5 12 4l8 7.5" />
@@ -17,6 +18,7 @@ const TABS = [
   {
     key: "search",
     label: "Pretraga",
+    href: "/",
     path: (
       <>
         <circle cx={11} cy={11} r={7} />
@@ -27,16 +29,19 @@ const TABS = [
   {
     key: "saved",
     label: "Sačuvano",
+    href: "/sacuvano",
     path: <path d="M6 3h12v18l-6-4-6 4V3z" />,
   },
   {
     key: "msg",
     label: "Poruke",
+    href: "/moj-nalog",
     path: <path d="M4 5h16v11H8l-4 4V5z" />,
   },
   {
     key: "profile",
     label: "Profil",
+    href: "/moj-nalog",
     path: (
       <>
         <circle cx={12} cy={8} r={3.4} />
@@ -59,7 +64,7 @@ export function MobileTabBar({ initialActive = "home" }: { initialActive?: strin
             className={`mobile-tab${active === tab.key ? " active" : ""}`}
             onClick={() => {
               setActive(tab.key);
-              if (tab.key === "home") router.push("/");
+              router.push(tab.href);
             }}
           >
             <svg width={21} height={21} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">

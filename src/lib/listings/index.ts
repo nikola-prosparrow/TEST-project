@@ -5,6 +5,11 @@ import type { ListingsRepository } from "./types";
 
 export type { Listing, ListingFilters, CreateListingInput, ListingsRepository, ListingType, PropertyType, PricePeriod } from "./types";
 
+// One shared instance per server process, so listings created through it
+// (e.g. local dev without .env.local) persist across requests instead of
+// resetting to the seed data on every call.
+const fallback = createInMemoryRepository();
+
 // Supabase-backed when the project is configured (local dev with .env.local,
 // or Vercel with the env vars set). Falls back to the in-memory repository
 // otherwise — this is what keeps CI/unit tests hermetic and fast (see AD6).
@@ -13,5 +18,5 @@ export async function getListingsRepository(): Promise<ListingsRepository> {
     const supabase = await createClient();
     return createSupabaseRepository(supabase);
   }
-  return createInMemoryRepository();
+  return fallback;
 }

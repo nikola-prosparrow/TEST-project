@@ -12,7 +12,7 @@ export default async function SignUpPage() {
 
   return (
     <div>
-      <SiteHeader showSaved={false} user={user} />
+      <SiteHeader user={user} />
       <AuthForm mode="signup" action={signUpAction} />
       <SiteFooter />
     </div>

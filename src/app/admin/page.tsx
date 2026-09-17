@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
 import { RoadmapBoard } from "@/components/admin/RoadmapBoard";
 import { TestStatusDashboard } from "@/components/admin/TestStatusDashboard";
 import { TechDebtList } from "@/components/admin/TechDebtList";
 import { ArchitectureDecisionsList } from "@/components/admin/ArchitectureDecisionsList";
+import { getCurrentUser } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Admin — ProSparrow",
@@ -27,7 +29,11 @@ function Section({
   );
 }
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect(`/prijava?next=${encodeURIComponent("/admin")}`);
+  if (!process.env.ADMIN_EMAIL || user.email !== process.env.ADMIN_EMAIL) notFound();
+
   return (
     <div className="min-h-screen bg-zinc-50 px-6 py-10 sm:px-10">
       <div className="mx-auto max-w-5xl">

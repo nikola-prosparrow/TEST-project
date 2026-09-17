@@ -97,6 +97,16 @@ export function CreateListingForm() {
             <textarea id="description" name="description" required minLength={20} placeholder="Opiši nekretninu — stanje, okolina, šta je izdvaja." />
           </div>
 
+          <div className="form-field-block">
+            <label htmlFor="phone">Telefon (opciono, za &quot;Prikaži broj telefona&quot;)</label>
+            <input id="phone" name="phone" type="tel" placeholder="npr. 06X XXX XXXX" />
+          </div>
+
+          <div className="form-field-block">
+            <label htmlFor="photos">Fotografije (opciono, do 8)</label>
+            <input id="photos" name="photos" type="file" accept="image/*" multiple />
+          </div>
+
           <button type="submit" className="btn btn-primary btn-block" disabled={pending}>
             {pending ? "Objavljujem…" : "Objavi oglas"}
           </button>

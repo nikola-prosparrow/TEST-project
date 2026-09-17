@@ -33,7 +33,8 @@ export async function signInAction(
     return { error: "Pogrešan email ili lozinka." };
   }
 
-  redirect("/");
+  const next = String(formData.get("next") ?? "");
+  redirect(next.startsWith("/") && !next.startsWith("//") ? next : "/");
 }
 
 export async function signUpAction(

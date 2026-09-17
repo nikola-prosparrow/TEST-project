@@ -13,7 +13,7 @@ export default async function CreateListingPage() {
 
   return (
     <div>
-      <SiteHeader showSaved={false} user={user} />
+      <SiteHeader user={user} />
       <CreateListingForm />
       <SiteFooter />
     </div>

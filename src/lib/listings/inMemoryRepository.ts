@@ -22,6 +22,9 @@ const SEED_LISTINGS: Listing[] = [
       "Svetao i funkcionalan dvosoban stan u srcu Vračara, u mirnoj ulici na par minuta od parka. Kompletno renoviran 2022. godine, sa novom stolarijom i podnim grejanjem u kupatilu. Prostrana terasa gleda na unutrašnje dvorište.",
     features: ["Podno grejanje", "Terasa", "Lift", "Parking mesto", "Klima uređaj", "Nameštaj"],
     verified: true,
+    lat: 44.7995,
+    lng: 20.4778,
+    photoPaths: [],
     createdAt: "2026-01-10T00:00:00.000Z",
   },
   {
@@ -44,6 +47,9 @@ const SEED_LISTINGS: Listing[] = [
       "Prostrana porodična kuća u mirnom delu Zemuna, sa ograđenim dvorištem i garažom za dva vozila. Dnevni boravak povezan sa trpezarijom i kuhinjom, četiri spavaće sobe raspoređene na dve etaže.",
     features: ["Dvorište", "Garaža", "Podrum", "Terasa", "Klima uređaj", "Nameštaj"],
     verified: true,
+    lat: 44.843,
+    lng: 20.4013,
+    photoPaths: [],
     createdAt: "2026-01-12T00:00:00.000Z",
   },
   {
@@ -66,6 +72,9 @@ const SEED_LISTINGS: Listing[] = [
       "Moderno opremljena garsonjera u samom centru Novog Sada, na par minuta hoda od Zmaj Jovine ulice i fakulteta. Kompletno opremljena kuhinja, brz internet i klima uređaj.",
     features: ["Nameštaj", "Klima uređaj", "Internet uključen", "Veš mašina", "Lift", "Blizina fakulteta"],
     verified: false,
+    lat: 45.2551,
+    lng: 19.8452,
+    photoPaths: [],
     createdAt: "2026-01-14T00:00:00.000Z",
   },
   {
@@ -88,6 +97,9 @@ const SEED_LISTINGS: Listing[] = [
       "Luksuzni penthouse na poslednjem spratu, sa panoramskim pogledom na grad i velikom terasom. Otvoren dnevni prostor, dve garderobe i podno grejanje u celom stanu.",
     features: ["Terasa", "Panoramski pogled", "Lift", "Parking mesto", "Klima uređaj", "Podno grejanje"],
     verified: true,
+    lat: 44.8125,
+    lng: 20.411,
+    photoPaths: [],
     createdAt: "2026-01-16T00:00:00.000Z",
   },
 ];
@@ -114,6 +126,16 @@ export function createInMemoryRepository(): ListingsRepository {
       return listings.find((listing) => listing.id === id) ?? null;
     },
 
+    async listByOwner(ownerId) {
+      return listings.filter((listing) => listing.ownerId === ownerId);
+    },
+
+    async countRecentByOwner(ownerId, since) {
+      return listings.filter(
+        (listing) => listing.ownerId === ownerId && new Date(listing.createdAt) >= since,
+      ).length;
+    },
+
     async create(input, ownerId) {
       const listing: Listing = {
         id: randomUUID(),
@@ -134,10 +156,18 @@ export function createInMemoryRepository(): ListingsRepository {
         description: input.description,
         features: input.features ?? [],
         verified: false,
+        lat: input.lat ?? null,
+        lng: input.lng ?? null,
+        photoPaths: [],
         createdAt: new Date().toISOString(),
       };
       listings.push(listing);
       return listing;
+    },
+
+    async updatePhotos(id, photoPaths) {
+      const listing = listings.find((l) => l.id === id);
+      if (listing) listing.photoPaths = photoPaths;
     },
   };
 }

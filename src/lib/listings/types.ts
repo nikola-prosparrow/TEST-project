@@ -21,6 +21,9 @@ export type Listing = {
   description: string;
   features: string[];
   verified: boolean;
+  lat: number | null;
+  lng: number | null;
+  photoPaths: string[];
   createdAt: string;
 };
 
@@ -47,10 +50,15 @@ export type CreateListingInput = {
   yearBuilt?: string;
   description: string;
   features?: string[];
+  lat?: number;
+  lng?: number;
 };
 
 export interface ListingsRepository {
   list(filters?: ListingFilters): Promise<Listing[]>;
   getById(id: string): Promise<Listing | null>;
+  listByOwner(ownerId: string): Promise<Listing[]>;
+  countRecentByOwner(ownerId: string, since: Date): Promise<number>;
   create(input: CreateListingInput, ownerId: string): Promise<Listing>;
+  updatePhotos(id: string, photoPaths: string[]): Promise<void>;
 }

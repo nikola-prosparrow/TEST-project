@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Listing } from "@/lib/listings/types";
 import { formatPrice } from "@/lib/format";
+import { publicPhotoUrl } from "@/lib/storage";
+import { toggleFavoriteAction } from "@/app/actions/favorites";
 import {
   HeartIcon,
   ShieldIcon,
@@ -13,20 +15,38 @@ import {
   AreaIcon,
 } from "@/components/icons";
 
-export function ListingCard({ listing }: { listing: Listing }) {
-  const [fav, setFav] = useState(false);
+export function ListingCard({ listing, initialFav = false }: { listing: Listing; initialFav?: boolean }) {
+  const [fav, setFav] = useState(initialFav);
+  const [pending, setPending] = useState(false);
+  const coverPhoto = listing.photoPaths[0];
 
   return (
     <Link href={`/listing/${listing.id}`} className="card">
-      <div className="card-photo">
-        <HouseIcon />
+      <div className="card-photo" style={coverPhoto ? { background: "none" } : undefined}>
+        {coverPhoto ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={publicPhotoUrl(coverPhoto)}
+            alt=""
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          <HouseIcon />
+        )}
         <button
           className="heart-btn"
           aria-label="Sačuvaj oglas"
-          onClick={(e) => {
+          disabled={pending}
+          onClick={async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            setFav((prev) => !prev);
+            setPending(true);
+            try {
+              const next = await toggleFavoriteAction(listing.id);
+              setFav(next);
+            } finally {
+              setPending(false);
+            }
           }}
         >
           <HeartIcon active={fav} />

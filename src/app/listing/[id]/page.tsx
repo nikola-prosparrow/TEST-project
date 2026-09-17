@@ -4,6 +4,8 @@ import { getListingsRepository } from "@/lib/listings";
 import { ListingDetail } from "@/components/ListingDetail";
 import { formatPrice } from "@/lib/format";
 import { getCurrentUser } from "@/lib/auth";
+import { getOwnerPhone } from "@/lib/profiles";
+import { getFavoriteIdsAction } from "@/app/actions/favorites";
 
 export async function generateMetadata({
   params,
@@ -31,5 +33,17 @@ export default async function ListingPage({
   const [listing, user] = await Promise.all([repo.getById(id), getCurrentUser()]);
   if (!listing) notFound();
 
-  return <ListingDetail listing={listing} user={user} />;
+  const [ownerPhone, favoriteIds] = await Promise.all([
+    getOwnerPhone(listing.ownerId),
+    getFavoriteIdsAction(),
+  ]);
+
+  return (
+    <ListingDetail
+      listing={listing}
+      user={user}
+      ownerPhone={ownerPhone}
+      initialFav={favoriteIds.includes(listing.id)}
+    />
+  );
 }

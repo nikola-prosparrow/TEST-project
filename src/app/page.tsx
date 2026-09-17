@@ -5,6 +5,7 @@ import { MobileTabBar } from "@/components/MobileTabBar";
 import { ListingCard } from "@/components/ListingCard";
 import { getListingsRepository } from "@/lib/listings";
 import { getCurrentUser } from "@/lib/auth";
+import { getFavoriteIdsAction } from "@/app/actions/favorites";
 import type { ListingType, PropertyType } from "@/lib/listings/types";
 import { PROPERTY_TYPE_LABELS, PROPERTY_TYPE_CHIP_LABELS } from "@/lib/listings/labels";
 import { buildSearchHref, type SearchParamsRecord } from "@/lib/searchHref";
@@ -49,10 +50,12 @@ export default async function Home({
   };
 
   const repo = await getListingsRepository();
-  const [listings, user] = await Promise.all([
+  const [listings, user, favoriteIds] = await Promise.all([
     repo.list({ listingType, city, propertyType, maxPrice }),
     getCurrentUser(),
+    getFavoriteIdsAction(),
   ]);
+  const favoriteIdSet = new Set(favoriteIds);
 
   return (
     <div>
@@ -171,7 +174,7 @@ export default async function Home({
         {listings.length > 0 ? (
           <div className="listing-grid">
             {listings.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
+              <ListingCard key={listing.id} listing={listing} initialFav={favoriteIdSet.has(listing.id)} />
             ))}
           </div>
         ) : (

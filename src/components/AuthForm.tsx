@@ -10,10 +10,12 @@ export function AuthForm({
   mode,
   action,
   successMessage,
+  next,
 }: {
   mode: "signin" | "signup";
   action: (state: AuthActionState, formData: FormData) => Promise<AuthActionState>;
   successMessage?: string;
+  next?: string;
 }) {
   const [state, formAction, pending] = useActionState(action, INITIAL_STATE);
 
@@ -31,6 +33,7 @@ export function AuthForm({
         {state.error && <div className="auth-error">{state.error}</div>}
 
         <form action={formAction}>
+          {next && <input type="hidden" name="next" value={next} />}
           <div className="form-field-block">
             <label htmlFor="email">Email</label>
             <input id="email" name="email" type="email" required autoComplete="email" />

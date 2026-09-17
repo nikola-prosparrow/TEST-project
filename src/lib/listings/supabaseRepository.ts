@@ -20,6 +20,9 @@ type ListingRow = {
   description: string;
   features: string[];
   verified: boolean;
+  lat: number | null;
+  lng: number | null;
+  photo_paths: string[];
   created_at: string;
 };
 
@@ -43,6 +46,9 @@ function fromRow(row: ListingRow): Listing {
     description: row.description,
     features: row.features ?? [],
     verified: row.verified,
+    lat: row.lat,
+    lng: row.lng,
+    photoPaths: row.photo_paths ?? [],
     createdAt: row.created_at,
   };
 }
@@ -69,6 +75,26 @@ export function createSupabaseRepository(supabase: SupabaseClient): ListingsRepo
       return data ? fromRow(data as ListingRow) : null;
     },
 
+    async listByOwner(ownerId: string) {
+      const { data, error } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("owner_id", ownerId)
+        .order("created_at", { ascending: false });
+      if (error) throw new Error(`Failed to list owner listings: ${error.message}`);
+      return (data as ListingRow[]).map(fromRow);
+    },
+
+    async countRecentByOwner(ownerId: string, since: Date) {
+      const { count, error } = await supabase
+        .from("listings")
+        .select("*", { count: "exact", head: true })
+        .eq("owner_id", ownerId)
+        .gte("created_at", since.toISOString());
+      if (error) throw new Error(`Failed to count owner listings: ${error.message}`);
+      return count ?? 0;
+    },
+
     async create(input: CreateListingInput, ownerId: string) {
       const { data, error } = await supabase
         .from("listings")
@@ -88,12 +114,19 @@ export function createSupabaseRepository(supabase: SupabaseClient): ListingsRepo
           year_built: input.yearBuilt ?? null,
           description: input.description,
           features: input.features ?? [],
+          lat: input.lat ?? null,
+          lng: input.lng ?? null,
         })
         .select("*")
         .single();
 
       if (error) throw new Error(`Failed to create listing: ${error.message}`);
       return fromRow(data as ListingRow);
+    },
+
+    async updatePhotos(id: string, photoPaths: string[]) {
+      const { error } = await supabase.from("listings").update({ photo_paths: photoPaths }).eq("id", id);
+      if (error) throw new Error(`Failed to update photos for listing ${id}: ${error.message}`);
     },
   };
 }

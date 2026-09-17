@@ -76,4 +76,79 @@ describe("InMemoryListingsRepository", () => {
     const listed = await repo.list({ city: "Kragujevac" });
     expect(listed.some((l) => l.id === created.id)).toBe(true);
   });
+
+  test("listByOwner() returns only listings created by that owner", async () => {
+    const created = await repo.create(
+      {
+        title: "Vlasnikov stan",
+        listingType: "sale",
+        propertyType: "apartment",
+        city: "Niš",
+        address: "Test ulica 2",
+        price: 80000,
+        pricePeriod: "total",
+        areaSqm: 45,
+        rooms: 2,
+        bathrooms: 1,
+        description: "Test opis broj dva.",
+      },
+      "owner-456",
+    );
+
+    const owned = await repo.listByOwner("owner-456");
+    expect(owned.map((l) => l.id)).toEqual([created.id]);
+
+    const ownedByOther = await repo.listByOwner("owner-does-not-exist");
+    expect(ownedByOther).toEqual([]);
+  });
+
+  test("countRecentByOwner() counts only listings created after the given time", async () => {
+    const ownerId = "owner-rate-limit";
+    await repo.create(
+      {
+        title: "Prvi test oglas",
+        listingType: "sale",
+        propertyType: "apartment",
+        city: "Niš",
+        address: "Test ulica 3",
+        price: 80000,
+        pricePeriod: "total",
+        areaSqm: 45,
+        rooms: 2,
+        bathrooms: 1,
+        description: "Test opis broj tri.",
+      },
+      ownerId,
+    );
+
+    const future = new Date(Date.now() + 60_000);
+    const past = new Date(Date.now() - 60_000);
+
+    expect(await repo.countRecentByOwner(ownerId, future)).toBe(0);
+    expect(await repo.countRecentByOwner(ownerId, past)).toBe(1);
+  });
+
+  test("updatePhotos() sets photoPaths on the listing", async () => {
+    const created = await repo.create(
+      {
+        title: "Stan sa fotografijama",
+        listingType: "sale",
+        propertyType: "apartment",
+        city: "Kragujevac",
+        address: "Test ulica 4",
+        price: 60000,
+        pricePeriod: "total",
+        areaSqm: 40,
+        rooms: 1,
+        bathrooms: 1,
+        description: "Test opis broj četiri.",
+      },
+      "owner-123",
+    );
+
+    await repo.updatePhotos(created.id, ["owner-123/a.jpg", "owner-123/b.jpg"]);
+
+    const found = await repo.getById(created.id);
+    expect(found?.photoPaths).toEqual(["owner-123/a.jpg", "owner-123/b.jpg"]);
+  });
 });

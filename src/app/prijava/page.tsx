@@ -14,14 +14,16 @@ export default async function SignInPage({
 }) {
   const sp = await searchParams;
   const user = await getCurrentUser();
+  const next = typeof sp.next === "string" ? sp.next : undefined;
 
   return (
     <div>
-      <SiteHeader showSaved={false} user={user} />
+      <SiteHeader user={user} />
       <AuthForm
         mode="signin"
         action={signInAction}
         successMessage={sp.registrovan ? "Uspešno si registrovan/na — sad se prijavi." : undefined}
+        next={next}
       />
       <SiteFooter />
     </div>

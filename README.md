@@ -2,9 +2,9 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-Copy `.env.local.example` to `.env.local` and fill in your Supabase project's URL and publishable/anon key (Project Settings → API Keys). Without it, the app falls back to an in-memory mock listings repository — fine for UI work, but auth and posting listings won't persist.
+Copy `.env.local.example` to `.env.local` and fill in your Supabase project's URL and publishable/anon key (Project Settings → API Keys), plus `ADMIN_EMAIL` (the account allowed to view `/admin`). Without Supabase configured, the app falls back to an in-memory mock listings repository — fine for UI work, but auth, posting listings, favorites, and messages won't persist.
 
-Run the SQL in `supabase/migrations/` (Supabase SQL Editor) once to create the `listings` table.
+Run the SQL files in `supabase/migrations/` in order (Supabase SQL Editor) once, to create the `listings`, `profiles`, `favorites`, and `messages` tables plus the `listing-photos` storage bucket.
 
 Then, run the development server:
 

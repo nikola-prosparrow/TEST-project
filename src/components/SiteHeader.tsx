@@ -27,13 +27,7 @@ function BrandLogo() {
   );
 }
 
-export function SiteHeader({
-  showSaved = true,
-  user = null,
-}: {
-  showSaved?: boolean;
-  user?: CurrentUser | null;
-}) {
+export function SiteHeader({ user = null }: { user?: CurrentUser | null }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -47,30 +41,28 @@ export function SiteHeader({
           <Link className="nav-link" href="/">
             Kupovina
           </Link>
-          <a className="nav-link" href="#">
+          <Link className="nav-link" href="/?listingType=rent">
             Izdavanje
-          </a>
+          </Link>
           <a className="nav-link" href="#">
             Novogradnja
           </a>
-          <a className="nav-link" href="#">
+          <Link className="nav-link" href="/postavi-oglas">
             Prodaj / izdaj
-          </a>
+          </Link>
         </nav>
         <div className="nav-actions">
-          {showSaved && (
-            <a className="nav-link" href="#">
-              <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 3h12v18l-6-4-6 4V3z" />
-              </svg>
-              Sačuvano
-            </a>
-          )}
+          <Link className="nav-link" href="/sacuvano">
+            <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 3h12v18l-6-4-6 4V3z" />
+            </svg>
+            Sačuvano
+          </Link>
           {user ? (
             <>
-              <span className="nav-link" title={user.email}>
+              <Link className="nav-link nav-email" href="/moj-nalog" title={user.email}>
                 {user.email}
-              </span>
+              </Link>
               <form action={signOutAction}>
                 <button type="submit" className="btn btn-secondary">
                   Odjavi se
@@ -82,11 +74,9 @@ export function SiteHeader({
               Prijavi se
             </Link>
           )}
-          {showSaved && (
-            <Link href="/postavi-oglas" className="btn btn-primary">
-              Postavi oglas
-            </Link>
-          )}
+          <Link href="/postavi-oglas" className="btn btn-primary">
+            Postavi oglas
+          </Link>
         </div>
         <button className="nav-menu-btn" aria-label="Meni" onClick={() => setMenuOpen((prev) => !prev)}>
           <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">

@@ -36,7 +36,8 @@ export const architectureDecisions: ArchitectureDecision[] = [
     options: ["Vercel Blob", "Supabase Storage", "Cloudinary"],
     recommendation:
       "Isti provider kao baza/auth (Supabase Storage) radi manje kompleksnosti i jednog dashboard-a za sve.",
-    status: "open",
+    decision: "Supabase Storage, bucket 'listing-photos' sa RLS politikama koje prate isto vlasništvo kao listings tabela.",
+    status: "decided",
   },
   {
     id: "AD4",
@@ -70,7 +71,30 @@ export const architectureDecisions: ArchitectureDecision[] = [
     recommendation:
       "Kombinacija — brzi unit testovi sa mock-ovanim data-layer-om za TDD petlju, Playwright e2e ide na pravu (test) bazu za end-to-end poverenje.",
     decision:
-      "Pojednostavljeno u odnosu na preporuku: nemamo poseban Supabase test projekat (dodatni nalog), pa repository factory koristi in-memory implementaciju kad god NEXT_PUBLIC_SUPABASE_URL nije podešen — što pokriva i unit testove i e2e/CI (GitHub Actions nema Supabase secrets). Lokalni dev i produkcija koriste pravi Supabase. Rizik: e2e ne testira stvarnu Supabase integraciju (RLS, mrežne greške) — vredi razmotriti poseban test projekat kad se pojavi budžet/vreme.",
+      "Pojednostavljeno u odnosu na preporuku: nemamo poseban Supabase test projekat (dodatni nalog), pa repository factory koristi in-memory implementaciju kad god NEXT_PUBLIC_SUPABASE_URL nije podešen — što pokriva i unit testove i e2e/CI (GitHub Actions nema Supabase secrets). Lokalni dev i produkcija koriste pravi Supabase. Rizik se već ostvario: ručno testiranje registracije potrošilo je Supabase-ov besplatni email rate limit (\"email rate limit exceeded\") — potvrđuje da e2e ne hvata probleme specifične za pravu Supabase integraciju. Vredi razmotriti poseban test projekat ili custom SMTP kad se pojavi budžet/vreme.",
+    status: "decided",
+  },
+  {
+    id: "AD7",
+    question: "Koji provajder za mapu i geokodiranje adrese?",
+    options: [
+      "OpenStreetMap (Leaflet + Nominatim)",
+      "Google Maps / Mapbox",
+    ],
+    recommendation:
+      "OpenStreetMap — besplatno bez naloga/kartice, dovoljno precizno za MVP obim.",
+    decision:
+      "OpenStreetMap. Nominatim za geokodiranje (adresa → lat/lng) pri postavljanju oglasa, Leaflet za prikaz mape na stranici oglasa. Napomena: Nominatim ima usage policy limit (1 zahtev/sekund, obavezan User-Agent) — dovoljno za MVP, ali ne za veći obim bez sopstvenog Nominatim servera ili prelaska na plaćeni provajder.",
+    status: "decided",
+  },
+  {
+    id: "AD8",
+    question: "Da li poruke kupca vlasniku šalju email notifikaciju?",
+    options: ["Da, uz SMTP servis (npr. Resend)", "Ne, samo se čuvaju u bazi i vide u dashboard-u"],
+    recommendation:
+      "Samo dashboard za sada — izbegava još jedan nalog/servis pre nego što imamo realne korisnike.",
+    decision:
+      "Samo u bazi, vlasnik ih vidi u svom dashboard-u (S4). Email notifikacije su odložene dok se ne reši SMTP (isti problem kao Supabase-ov email rate limit) — vredi rešiti oba istovremeno.",
     status: "decided",
   },
 ];
