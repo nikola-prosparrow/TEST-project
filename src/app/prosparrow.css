@@ -394,6 +394,40 @@ img { display: block; max-width: 100%; }
 .offer-listing { font-size: 13px; color: var(--c2); font-weight: 600; }
 .offer-message { font-size: 14px; color: var(--text); line-height: 1.5; margin-top: 8px; }
 
+/* ---------- Transaction tracker (reservation -> arras -> notary) ---------- */
+.legal-warning {
+  background: rgba(214,65,127,0.06); border: 1px solid rgba(214,65,127,0.2); border-radius: var(--radius-md);
+  padding: 20px 22px; margin-bottom: 28px;
+}
+.legal-warning h3 { margin: 0 0 8px; font-size: 15px; font-weight: 700; color: var(--c2); }
+.legal-warning p { margin: 0 0 8px; font-size: 14px; line-height: 1.6; color: var(--text); }
+.legal-warning p:last-child { margin-bottom: 0; }
+.legal-warning ul { margin: 8px 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: var(--text); }
+
+.stage-stepper { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+.stage-step {
+  flex: 1; min-width: 120px; padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: #fff; text-align: center; font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+}
+.stage-step.active { border-color: var(--c2); color: var(--c2); background: rgba(214,65,127,0.06); }
+.stage-step.done { border-color: #1FA97A; color: #1FA97A; background: rgba(31,169,122,0.06); }
+
+.tx-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; margin-bottom: 20px; }
+.tx-card h2 { font-size: 17px; font-weight: 700; margin: 0 0 16px; }
+
+.doc-checklist { display: flex; flex-direction: column; gap: 10px; }
+.doc-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F0F0F1; }
+.doc-item:last-child { border-bottom: none; }
+.doc-item-label { font-size: 14px; font-weight: 600; }
+.doc-item-hint { font-size: 12px; color: var(--text-secondary); }
+.doc-status-select { font-size: 13px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: #fff; }
+
+.deadline-banner {
+  background: linear-gradient(90deg, rgba(242,136,74,0.1), rgba(214,65,127,0.08));
+  border: 1px solid rgba(242,136,74,0.3); border-radius: var(--radius-sm);
+  padding: 12px 16px; font-size: 14px; font-weight: 600; color: #B4600F; margin-bottom: 20px;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1080px) {
   .listing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

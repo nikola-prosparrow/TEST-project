@@ -25,6 +25,7 @@ export type CreateOfferInput = {
 
 export interface OffersRepository {
   create(input: CreateOfferInput, bidderId: string): Promise<Offer>;
+  getById(offerId: string): Promise<Offer | null>;
   listByOwner(ownerId: string): Promise<Offer[]>;
   listByBidder(bidderId: string): Promise<Offer[]>;
   updateStatus(offerId: string, status: OfferStatus): Promise<void>;

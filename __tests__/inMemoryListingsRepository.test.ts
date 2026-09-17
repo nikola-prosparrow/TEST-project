@@ -151,4 +151,31 @@ describe("InMemoryListingsRepository", () => {
     const found = await repo.getById(created.id);
     expect(found?.photoPaths).toEqual(["owner-123/a.jpg", "owner-123/b.jpg"]);
   });
+
+  test("setBestFinalDeadline() sets and clears the deadline", async () => {
+    const created = await repo.create(
+      {
+        title: "Stan sa rokom",
+        listingType: "sale",
+        propertyType: "apartment",
+        city: "Kragujevac",
+        address: "Test ulica 5",
+        price: 60000,
+        pricePeriod: "total",
+        areaSqm: 40,
+        rooms: 1,
+        bathrooms: 1,
+        description: "Test opis broj pet.",
+      },
+      "owner-123",
+    );
+
+    expect((await repo.getById(created.id))?.bestFinalDeadline).toBeNull();
+
+    await repo.setBestFinalDeadline(created.id, "2026-12-01T00:00:00.000Z");
+    expect((await repo.getById(created.id))?.bestFinalDeadline).toBe("2026-12-01T00:00:00.000Z");
+
+    await repo.setBestFinalDeadline(created.id, null);
+    expect((await repo.getById(created.id))?.bestFinalDeadline).toBeNull();
+  });
 });

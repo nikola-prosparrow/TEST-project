@@ -12,8 +12,12 @@ export function OfferActions({ offerId }: { offerId: string }) {
   async function setStatus(status: OfferStatus) {
     setPending(true);
     try {
-      await updateOfferStatusAction(offerId, status);
-      router.refresh();
+      const { transactionId } = await updateOfferStatusAction(offerId, status);
+      if (transactionId) {
+        router.push(`/transakcija/${transactionId}`);
+      } else {
+        router.refresh();
+      }
     } finally {
       setPending(false);
     }

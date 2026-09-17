@@ -51,6 +51,12 @@ export function createSupabaseOffersRepository(supabase: SupabaseClient): Offers
       return fromRow(data as OfferRow);
     },
 
+    async getById(offerId: string) {
+      const { data, error } = await supabase.from("offers").select("*").eq("id", offerId).maybeSingle();
+      if (error) throw new Error(`Failed to fetch offer ${offerId}: ${error.message}`);
+      return data ? fromRow(data as OfferRow) : null;
+    },
+
     async listByOwner(ownerId: string) {
       const { data, error } = await supabase
         .from("offers")

@@ -23,6 +23,10 @@ export function createInMemoryOffersRepository(): OffersRepository {
       return offer;
     },
 
+    async getById(offerId) {
+      return offers.find((o) => o.id === offerId) ?? null;
+    },
+
     async listByOwner(ownerId) {
       return offers.filter((o) => o.ownerId === ownerId);
     },

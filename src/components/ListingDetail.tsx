@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { MobileTabBar } from "@/components/MobileTabBar";
 import { ContactOwnerForm } from "@/components/ContactOwnerForm";
 import { OfferForm } from "@/components/OfferForm";
+import { BestFinalDeadlineControl } from "@/components/BestFinalDeadlineControl";
 import { HeartIcon, ShieldIcon } from "@/components/icons";
 import type { Listing } from "@/lib/listings/types";
 import type { CurrentUser } from "@/lib/auth";
@@ -34,12 +35,24 @@ export function ListingDetail({
   const [fav, setFav] = useState(initialFav);
   const [favPending, setFavPending] = useState(false);
   const coverPhoto = listing.photoPaths[0];
+  const hasActiveDeadline = listing.bestFinalDeadline && new Date(listing.bestFinalDeadline) > new Date();
 
   return (
     <div>
       <SiteHeader user={user} />
 
       <div className="wrap">
+        {hasActiveDeadline && (
+          <div className="deadline-banner">
+            Vlasnik traži finalne ponude do{" "}
+            {new Date(listing.bestFinalDeadline!).toLocaleDateString("sr-RS", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+            .
+          </div>
+        )}
         <Link href="/" className="breadcrumb">
           <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 6l-6 6 6 6" />
@@ -195,6 +208,10 @@ export function ListingDetail({
 
           {user && user.id !== listing.ownerId && (
             <OfferForm listingId={listing.id} ownerId={listing.ownerId} defaultEmail={user.email} />
+          )}
+
+          {user && user.id === listing.ownerId && (
+            <BestFinalDeadlineControl listingId={listing.id} currentDeadline={listing.bestFinalDeadline} />
           )}
         </div>
       </div>

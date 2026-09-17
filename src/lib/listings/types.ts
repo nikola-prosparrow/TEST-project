@@ -24,6 +24,7 @@ export type Listing = {
   lat: number | null;
   lng: number | null;
   photoPaths: string[];
+  bestFinalDeadline: string | null;
   createdAt: string;
 };
 
@@ -61,4 +62,5 @@ export interface ListingsRepository {
   countRecentByOwner(ownerId: string, since: Date): Promise<number>;
   create(input: CreateListingInput, ownerId: string): Promise<Listing>;
   updatePhotos(id: string, photoPaths: string[]): Promise<void>;
+  setBestFinalDeadline(id: string, deadline: string | null): Promise<void>;
 }

@@ -10,6 +10,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { getListingsRepository } from "@/lib/listings";
 import { getMessagesRepository } from "@/lib/messages";
 import { getOffersRepository } from "@/lib/offers";
+import { getTransactionsRepository } from "@/lib/transactions";
 import { getFavoriteIdsAction } from "@/app/actions/favorites";
 import type { OfferStatus } from "@/lib/offers/types";
 
@@ -47,6 +48,17 @@ export default async function MyAccountPage() {
   const sentOfferListings = await Promise.all(sentOfferListingIds.map((id) => listingsRepo.getById(id)));
   const sentOfferListingTitleById = new Map(
     sentOfferListings.filter((l) => l !== null).map((l) => [l.id, l.title]),
+  );
+
+  const transactionsRepo = await getTransactionsRepository();
+  const acceptedOfferIds = [...receivedOffers, ...sentOffers]
+    .filter((o) => o.status === "accepted")
+    .map((o) => o.id);
+  const transactionEntries = await Promise.all(
+    acceptedOfferIds.map(async (offerId) => [offerId, await transactionsRepo.getByOfferId(offerId)] as const),
+  );
+  const transactionIdByOfferId = new Map(
+    transactionEntries.filter(([, tx]) => tx !== null).map(([offerId, tx]) => [offerId, tx!.id]),
   );
 
   return (
@@ -98,6 +110,15 @@ export default async function MyAccountPage() {
                 </Link>
                 {offer.message && <p className="offer-message">{offer.message}</p>}
                 {offer.status === "pending" && <OfferActions offerId={offer.id} />}
+                {transactionIdByOfferId.has(offer.id) && (
+                  <Link
+                    href={`/transakcija/${transactionIdByOfferId.get(offer.id)}`}
+                    className="btn btn-secondary"
+                    style={{ padding: "8px 16px", fontSize: 13, marginTop: 10, display: "inline-flex" }}
+                  >
+                    Otvori transakciju
+                  </Link>
+                )}
               </div>
             ))}
           </div>
@@ -129,6 +150,15 @@ export default async function MyAccountPage() {
                   {sentOfferListingTitleById.get(offer.listingId) ?? "Oglas"}
                 </Link>
                 {offer.message && <p className="offer-message">{offer.message}</p>}
+                {transactionIdByOfferId.has(offer.id) && (
+                  <Link
+                    href={`/transakcija/${transactionIdByOfferId.get(offer.id)}`}
+                    className="btn btn-secondary"
+                    style={{ padding: "8px 16px", fontSize: 13, marginTop: 10, display: "inline-flex" }}
+                  >
+                    Otvori transakciju
+                  </Link>
+                )}
               </div>
             ))}
           </div>

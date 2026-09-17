@@ -84,6 +84,27 @@ export const roadmapNow: RoadmapItem[] = [
     jtbd: ["Prodavac #5", "Kupac #5"],
     done: true,
   },
+  {
+    id: "C5",
+    title: "Rezervacija → Arras → Notar (tracker, ne generator ugovora)",
+    description: "/transakcija/[id] prati proces kroz faze uz dokument checklist (nota simple, cédula, ITE, CEE, nulti dug, VPO) i upadljivo pravno upozorenje da se konsultuje advokat PRE potpisivanja. Ne generiše ugovore — to ostaje pravni posao van platforme (AD10).",
+    jtbd: ["Prodavac #6", "Kupac #6"],
+    done: true,
+  },
+  {
+    id: "C6",
+    title: "Potvrda depozita (bez pravog transfera novca)",
+    description: "Vlasnik i kupac nezavisno potvrđuju da je depozit (rezervacija/Arras) plaćen VAN platforme (npr. bankovnim transferom) — dve odvojene potvrde, bez ijednog eura koji prolazi kroz ProSparrow. Pravo escrow plaćanje ostaje van dometa (AD10).",
+    jtbd: ["Prodavac #6", "Kupac #6"],
+    done: true,
+  },
+  {
+    id: "C7",
+    title: "\"Best and final\" rok",
+    description: "Vlasnik postavlja rok na oglasu; banner vidljiv svim posetiocima poziva na finalne ponude pre isteka.",
+    jtbd: ["Prodavac #5"],
+    done: true,
+  },
 ];
 
 export const roadmapNext: RoadmapItem[] = [
@@ -127,28 +148,22 @@ export const roadmapLater: RoadmapItem[] = [
     jtbd: ["Kupac #1"],
   },
   {
-    id: "C5",
-    title: "Arras / rezervacioni ugovor",
-    description: "Kad vlasnik prihvati ponudu (M7), generisanje formalnog rezervacionog ugovora (špansko pravo: contrato de arras). Ovo je pravni dokument — treba pravni partner/notar integracija, ne nešto što agent samostalno generiše. Direktno se kosi sa ranijom 'Won't-have' odlukom o ugovorima — svesno je premešteno ovde jer je korisnik eksplicitno tražio, ali zahteva posebnu odluku o pravnoj odgovornosti pre gradnje.",
-    jtbd: ["Prodavac #6", "Kupac #6"],
-  },
-  {
-    id: "C6",
-    title: "Depozit / kapara plaćanje (escrow)",
-    description: "Pravi transfer novca za rezervaciju posle prihvaćene ponude (C5). Zahteva escrow/payment provajdera (npr. Stripe Connect) i verovatno regulatornu saglasnost po zemlji (Španija ima specifična pravila za arras depozite). Agent ne može i ne sme sam da izvršava finansijske transfere.",
-    jtbd: ["Prodavac #6", "Kupac #6"],
-  },
-  {
-    id: "C7",
-    title: "\"Best and final\" runda ponuda",
-    description: "Vlasnik postavlja rok; svi ponuđači dobijaju priliku da podnesu finalnu ponudu pre isteka. Nadgradnja na M7.",
-    jtbd: ["Prodavac #5"],
-  },
-  {
     id: "C8",
     title: "Notifikacije za ponude",
     description: "Email vlasniku kad stigne nova ponuda, email kupcu kad njegova ponuda bude prihvaćena/odbijena. Čeka SMTP servis (isto ograničenje kao AD8).",
     jtbd: ["Prodavac #5", "Kupac #5"],
+  },
+  {
+    id: "C9",
+    title: "Pravi ugovori (rezervacija + Arras)",
+    description: "Ono što C5 namerno NE radi: stvarno generisanje ili e-potpis pravno validnog ugovora. Zahteva partnerstvo sa advokatskom kancelarijom/legal-tech servisom (npr. e-potpis + pravni šablon overen za špansko tržište). Van dometa dok se ne nađe pravni partner — rizik je preveliki da se ovo radi bez licenciranog pravnika koji stoji iza sadržaja.",
+    jtbd: ["Prodavac #6", "Kupac #6"],
+  },
+  {
+    id: "C10",
+    title: "Pravo escrow plaćanje depozita",
+    description: "Ono što C6 namerno NE radi: stvaran transfer novca. Zahteva escrow/payment provajdera (npr. Stripe Connect) i regulatornu proveru po zemlji. Agent ne sme sam da izvršava finansijske transfere — ovo zahteva svesnu odluku vlasnika proizvoda i verovatno spoljnog pravnog saveta pre početka rada.",
+    jtbd: ["Prodavac #6", "Kupac #6"],
   },
 ];
 

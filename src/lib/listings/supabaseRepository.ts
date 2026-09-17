@@ -23,6 +23,7 @@ type ListingRow = {
   lat: number | null;
   lng: number | null;
   photo_paths: string[];
+  best_final_deadline: string | null;
   created_at: string;
 };
 
@@ -49,6 +50,7 @@ function fromRow(row: ListingRow): Listing {
     lat: row.lat,
     lng: row.lng,
     photoPaths: row.photo_paths ?? [],
+    bestFinalDeadline: row.best_final_deadline,
     createdAt: row.created_at,
   };
 }
@@ -127,6 +129,11 @@ export function createSupabaseRepository(supabase: SupabaseClient): ListingsRepo
     async updatePhotos(id: string, photoPaths: string[]) {
       const { error } = await supabase.from("listings").update({ photo_paths: photoPaths }).eq("id", id);
       if (error) throw new Error(`Failed to update photos for listing ${id}: ${error.message}`);
+    },
+
+    async setBestFinalDeadline(id: string, deadline: string | null) {
+      const { error } = await supabase.from("listings").update({ best_final_deadline: deadline }).eq("id", id);
+      if (error) throw new Error(`Failed to set deadline for listing ${id}: ${error.message}`);
     },
   };
 }

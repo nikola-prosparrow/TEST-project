@@ -110,4 +110,18 @@ export const architectureDecisions: ArchitectureDecision[] = [
       "Sealed-bid (M7). Vlasnik vidi sve ponude sortirane po iznosu; ponuđač vidi samo status sopstvene ponude. Otvorena licitacija nije razmatrana dalje — ne odgovara \"vlasnik bira najbolju ponudu mirno\" JTBD-u.",
     status: "decided",
   },
+  {
+    id: "AD10",
+    question: "Kako implementirati rezervaciju/Arras (C5) i depozit (C6) bez kršenja ograničenja agenta (bez generisanja pravnih ugovora, bez izvršavanja transfera novca)?",
+    options: [
+      "Tracker procesa + checklist + upozorenja (bez dokumenata/novca)",
+      "Sačekati pravnog/escrow partnera pa graditi punu funkcionalnost odjednom",
+      "Ne graditi ništa dok se ne reši partnerstvo",
+    ],
+    recommendation:
+      "Tracker procesa — daje realnu vrednost (faze, dokumenti, rokovi, upozorenja) odmah, bez čekanja na partnerstva koja mogu trajati mesecima, i bez preuzimanja pravnog/finansijskog rizika.",
+    decision:
+      "Izgrađen je tracker (/transakcija/[id]): faze rezervacija→Arras→notar, checklist od 6 standardnih španskih dokumenata (istraženo online — nota simple, cédula, ITE, CEE, nulti dug, VPO provera), i upadljivo upozorenje da se advokat konsultuje PRE potpisivanja. Dodata je i dvostrana potvrda depozita (C6) — obe strane nezavisno potvrđuju da je novac razmenjen VAN platforme, bez da platforma ikad dodirne transakciju. Pravo generisanje ugovora i pravo escrow plaćanje ostaju C9/C10 — svesno van dometa dok se ne nađe pravni/payment partner.",
+    status: "decided",
+  },
 ];

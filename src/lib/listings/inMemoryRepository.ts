@@ -25,6 +25,7 @@ const SEED_LISTINGS: Listing[] = [
     lat: 44.7995,
     lng: 20.4778,
     photoPaths: [],
+    bestFinalDeadline: null,
     createdAt: "2026-01-10T00:00:00.000Z",
   },
   {
@@ -50,6 +51,7 @@ const SEED_LISTINGS: Listing[] = [
     lat: 44.843,
     lng: 20.4013,
     photoPaths: [],
+    bestFinalDeadline: null,
     createdAt: "2026-01-12T00:00:00.000Z",
   },
   {
@@ -75,6 +77,7 @@ const SEED_LISTINGS: Listing[] = [
     lat: 45.2551,
     lng: 19.8452,
     photoPaths: [],
+    bestFinalDeadline: null,
     createdAt: "2026-01-14T00:00:00.000Z",
   },
   {
@@ -100,6 +103,7 @@ const SEED_LISTINGS: Listing[] = [
     lat: 44.8125,
     lng: 20.411,
     photoPaths: [],
+    bestFinalDeadline: null,
     createdAt: "2026-01-16T00:00:00.000Z",
   },
 ];
@@ -159,6 +163,7 @@ export function createInMemoryRepository(): ListingsRepository {
         lat: input.lat ?? null,
         lng: input.lng ?? null,
         photoPaths: [],
+    bestFinalDeadline: null,
         createdAt: new Date().toISOString(),
       };
       listings.push(listing);
@@ -168,6 +173,11 @@ export function createInMemoryRepository(): ListingsRepository {
     async updatePhotos(id, photoPaths) {
       const listing = listings.find((l) => l.id === id);
       if (listing) listing.photoPaths = photoPaths;
+    },
+
+    async setBestFinalDeadline(id, deadline) {
+      const listing = listings.find((l) => l.id === id);
+      if (listing) listing.bestFinalDeadline = deadline;
     },
   };
 }
