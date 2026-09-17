@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProSparrow — Pronađi dom koji ti sedne</title>
+  <meta name="description" content="ProSparrow — provereni oglasi nekretnina, jasne cene, pretraga koja stvarno ide brzo.">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="index.html" class="brand">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="psNavGrad" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#F2884A" />
+              <stop offset="55%" stop-color="#D6417F" />
+              <stop offset="100%" stop-color="#7A3596" />
+            </linearGradient>
+          </defs>
+          <circle cx="16" cy="16" r="15" fill="url(#psNavGrad)" />
+          <path d="M10 22c-1.6-4 0-9 4-11.6 2.6-1.7 5.7-1.9 8-.9-2.4.4-4.5 1.7-5.8 3.7-1.8 2.7-2 6.1-.6 9" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" />
+        </svg>
+        <span>prosparrow</span>
+      </a>
+      <nav class="nav-links">
+        <a class="nav-link" href="index.html">Kupovina</a>
+        <a class="nav-link" href="#">Izdavanje</a>
+        <a class="nav-link" href="#">Novogradnja</a>
+        <a class="nav-link" href="#">Prodaj / izdaj</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="nav-link" href="#">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4V3z"/></svg>
+          Sačuvano
+        </a>
+        <button class="btn btn-secondary">Prijavi se</button>
+        <button class="btn btn-primary">Postavi oglas</button>
+      </div>
+      <button class="nav-menu-btn" aria-label="Meni">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="wrap hero-inner">
+      <div class="badge-pill">
+        <span class="badge-dot"></span>
+        Kupovina · Izdavanje · Novogradnja
+      </div>
+      <h1>Pronađi dom koji ti <em>sedne</em>.</h1>
+      <p class="lead">Provereni oglasi, jasne cene, bez sitnih slova. Pretraga koja stvarno ide brzo.</p>
+
+      <form class="search-card" id="search-form">
+        <div class="search-tabs">
+          <button type="button" class="tab-btn active" data-tab="buy">Kupovina</button>
+          <button type="button" class="tab-btn" data-tab="rent">Izdavanje</button>
+        </div>
+        <div class="search-row">
+          <div class="search-field">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6E6E73" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+            <input type="text" placeholder="Grad, opština ili naselje" />
+          </div>
+          <div class="search-divider"></div>
+          <div class="search-field">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6E6E73" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>
+            <span>Tip nekretnine</span>
+          </div>
+          <div class="search-divider"></div>
+          <div class="search-field">
+            <span>Cena</span>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+            Pretraži
+          </button>
+        </div>
+      </form>
+
+      <div class="hero-actions">
+        <button class="btn btn-primary">
+          Postavi oglas
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button class="btn btn-secondary">Kako radimo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK CHIPS -->
+  <div class="wrap">
+    <div class="chips-row" id="chips-row">
+      <button class="chip active" data-chip="stan">Stanovi</button>
+      <button class="chip" data-chip="kuca">Kuće</button>
+      <button class="chip" data-chip="posl">Poslovni prostor</button>
+      <button class="chip" data-chip="zemlj">Zemljište</button>
+      <button class="chip" data-chip="luks">Luksuzno</button>
+    </div>
+  </div>
+
+  <!-- FEATURED LISTINGS -->
+  <section class="wrap section">
+    <div class="section-head">
+      <h2>Izdvojeno za tebe</h2>
+      <a href="#" class="section-link">
+        Pogledaj sve
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <div class="listing-grid" id="listing-grid">
+      <!-- cards injected by js/app.js -->
+    </div>
+  </section>
+
+  <!-- BROWSE BY CITY -->
+  <section class="city-section">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom: 22px;">
+        <h2>Pretraži po gradu</h2>
+      </div>
+      <div class="city-grid">
+        <a class="city-card" href="#" style="background: linear-gradient(135deg, #F2884A, #D6417F);">
+          <div class="overlay"></div>
+          <div class="label"><strong>Beograd</strong><span>2.481 nekretnina</span></div>
+        </a>
+        <a class="city-card" href="#" style="background: linear-gradient(135deg, #D6417F, #7A3596);">
+          <div class="overlay"></div>
+          <div class="label"><strong>Novi Sad</strong><span>864 nekretnina</span></div>
+        </a>
+        <a class="city-card" href="#" style="background: linear-gradient(135deg, #F2884A, #7A3596);">
+          <div class="overlay"></div>
+          <div class="label"><strong>Niš</strong><span>312 nekretnina</span></div>
+        </a>
+        <a class="city-card" href="#" style="background: linear-gradient(135deg, #7A3596, #D6417F);">
+          <div class="overlay"></div>
+          <div class="label"><strong>Subotica</strong><span>128 nekretnina</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY PROSPARROW -->
+  <section class="wrap feature-grid">
+    <div class="feature">
+      <div class="feature-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D6417F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+      </div>
+      <h3>Brzo pretraživanje</h3>
+      <p>Filtriraj po ceni, lokaciji i tipu nekretnine i dobij rezultate za par sekundi.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D6417F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <h3>Svaki oglas je proveren</h3>
+      <p>Ručno proveravamo vlasništvo i fotografije pre nego što oglas ode u pretragu.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D6417F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4V5z"/></svg>
+      </div>
+      <h3>Podrška kad ti zatreba</h3>
+      <p>Čet sa timom ProSparrow, sedam dana u nedelji, bez čekanja u redu.</p>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="wrap cta-section">
+    <div class="cta-banner">
+      <div>
+        <h2>Prodaješ ili izdaješ nekretninu?</h2>
+        <p>Postavi oglas besplatno za 5 minuta i stigni do hiljada zainteresovanih kupaca.</p>
+      </div>
+      <div class="cta-buttons">
+        <button class="btn" style="background:#fff; color:#1D1D1F;">Postavi oglas</button>
+        <button class="btn btn-ghost">Saznaj više</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-row">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="16" cy="16" r="15" fill="url(#psNavGrad)" />
+            <path d="M10 22c-1.6-4 0-9 4-11.6 2.6-1.7 5.7-1.9 8-.9-2.4.4-4.5 1.7-5.8 3.7-1.8 2.7-2 6.1-.6 9" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" />
+          </svg>
+          <span>prosparrow</span>
+        </div>
+        <p>Pronalaženje doma bez glavobolje. Beograd, Srbija.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <span class="title">Kompanija</span>
+          <a href="#">O nama</a>
+          <a href="#">Karijera</a>
+          <a href="#">Kontakt</a>
+        </div>
+        <div class="footer-col">
+          <span class="title">Za korisnike</span>
+          <a href="index.html">Kupovina</a>
+          <a href="#">Izdavanje</a>
+          <a href="#">Postavi oglas</a>
+        </div>
+        <div class="footer-col">
+          <span class="title">Podrška</span>
+          <a href="#">Pomoć</a>
+          <a href="#">Privatnost</a>
+          <a href="#">Uslovi</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MOBILE TAB BAR -->
+  <nav class="mobile-tabbar">
+    <div class="tabs">
+      <button class="mobile-tab active" data-tab="home">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>
+        Početna
+      </button>
+      <button class="mobile-tab" data-tab="search">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+        Pretraga
+      </button>
+      <button class="mobile-tab" data-tab="saved">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4V3z"/></svg>
+        Sačuvano
+      </button>
+      <button class="mobile-tab" data-tab="msg">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4V5z"/></svg>
+        Poruke
+      </button>
+      <button class="mobile-tab" data-tab="profile">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>
+        Profil
+      </button>
+    </div>
+  </nav>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
