@@ -381,6 +381,19 @@ img { display: block; max-width: 100%; }
 .message-card-body { font-size: 14px; color: var(--text); line-height: 1.5; margin: 6px 0; }
 .message-card-contact { font-size: 13px; color: var(--text-secondary); }
 
+/* ---------- Offers ---------- */
+.offer-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; }
+.offer-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.offer-amount { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.offer-status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; padding: 4px 10px; border-radius: 980px; }
+.offer-status-pending { background: rgba(242,136,74,0.12); color: #B4600F; }
+.offer-status-accepted { background: rgba(31,169,122,0.12); color: #1FA97A; }
+.offer-status-rejected { background: rgba(214,65,127,0.1); color: var(--c2); }
+.offer-status-withdrawn { background: var(--border); color: var(--text-tertiary); }
+.offer-from { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+.offer-listing { font-size: 13px; color: var(--c2); font-weight: 600; }
+.offer-message { font-size: 14px; color: var(--text); line-height: 1.5; margin-top: 8px; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1080px) {
   .listing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

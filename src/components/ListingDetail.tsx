@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { MobileTabBar } from "@/components/MobileTabBar";
 import { ContactOwnerForm } from "@/components/ContactOwnerForm";
+import { OfferForm } from "@/components/OfferForm";
 import { HeartIcon, ShieldIcon } from "@/components/icons";
 import type { Listing } from "@/lib/listings/types";
 import type { CurrentUser } from "@/lib/auth";
@@ -184,13 +185,17 @@ export function ListingDetail({
           )}
         </div>
 
-        <div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div className="sidebar-card">
             <div className="sidebar-price">{formatPrice(listing)}</div>
             <div className="sidebar-permsqm">{formatPricePerArea(listing)}</div>
 
             <ContactOwnerForm listingId={listing.id} ownerId={listing.ownerId} ownerPhone={ownerPhone} />
           </div>
+
+          {user && user.id !== listing.ownerId && (
+            <OfferForm listingId={listing.id} ownerId={listing.ownerId} defaultEmail={user.email} />
+          )}
         </div>
       </div>
 

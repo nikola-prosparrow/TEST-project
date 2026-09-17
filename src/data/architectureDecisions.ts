@@ -97,4 +97,17 @@ export const architectureDecisions: ArchitectureDecision[] = [
       "Samo u bazi, vlasnik ih vidi u svom dashboard-u (S4). Email notifikacije su odložene dok se ne reši SMTP (isti problem kao Supabase-ov email rate limit) — vredi rešiti oba istovremeno.",
     status: "decided",
   },
+  {
+    id: "AD9",
+    question: "Sealed-bid (ponuđači ne vide tuđe ponude) ili otvorena licitacija (svi vide sve iznose)?",
+    options: [
+      "Sealed-bid — svaki ponuđač vidi samo svoju ponudu i status",
+      "Otvorena licitacija — svi ponuđači vide trenutno najviši iznos uživo",
+    ],
+    recommendation:
+      "Sealed-bid — standardna praksa za \"best and final\" ponude na nekretnine, sprečava dogovaranje između ponuđača i pritisak da se nadmeću u krug.",
+    decision:
+      "Sealed-bid (M7). Vlasnik vidi sve ponude sortirane po iznosu; ponuđač vidi samo status sopstvene ponude. Otvorena licitacija nije razmatrana dalje — ne odgovara \"vlasnik bira najbolju ponudu mirno\" JTBD-u.",
+    status: "decided",
+  },
 ];

@@ -73,8 +73,15 @@ export const roadmapNow: RoadmapItem[] = [
   {
     id: "S4",
     title: "Dashboard vlasnika",
-    description: "/moj-nalog prikazuje sopstvene postavljene oglase i primljene poruke (iz M5) na jednom mestu.",
+    description: "/moj-nalog prikazuje sopstvene postavljene oglase, primljene poruke (M5) i ponude (M7) na jednom mestu.",
     jtbd: ["Prodavac #3"],
+    done: true,
+  },
+  {
+    id: "M7",
+    title: "Ponude i bidding",
+    description: "Kupac podnosi formalnu ponudu (iznos + poruka) na oglas. Vlasnik vidi SVE ponude na svoje oglase u /moj-nalog (sortirane po iznosu) i bira sam koju da prihvati/odbije — sealed-bid, ponuđači ne vide tuđe iznose. Rešava suštinu \"agencija me zavrne\" problema bez ijednog posrednika.",
+    jtbd: ["Prodavac #5", "Kupac #5"],
     done: true,
   },
 ];
@@ -119,10 +126,32 @@ export const roadmapLater: RoadmapItem[] = [
     description: "Email/push kad se pojavi novi oglas koji odgovara kriterijumima.",
     jtbd: ["Kupac #1"],
   },
+  {
+    id: "C5",
+    title: "Arras / rezervacioni ugovor",
+    description: "Kad vlasnik prihvati ponudu (M7), generisanje formalnog rezervacionog ugovora (špansko pravo: contrato de arras). Ovo je pravni dokument — treba pravni partner/notar integracija, ne nešto što agent samostalno generiše. Direktno se kosi sa ranijom 'Won't-have' odlukom o ugovorima — svesno je premešteno ovde jer je korisnik eksplicitno tražio, ali zahteva posebnu odluku o pravnoj odgovornosti pre gradnje.",
+    jtbd: ["Prodavac #6", "Kupac #6"],
+  },
+  {
+    id: "C6",
+    title: "Depozit / kapara plaćanje (escrow)",
+    description: "Pravi transfer novca za rezervaciju posle prihvaćene ponude (C5). Zahteva escrow/payment provajdera (npr. Stripe Connect) i verovatno regulatornu saglasnost po zemlji (Španija ima specifična pravila za arras depozite). Agent ne može i ne sme sam da izvršava finansijske transfere.",
+    jtbd: ["Prodavac #6", "Kupac #6"],
+  },
+  {
+    id: "C7",
+    title: "\"Best and final\" runda ponuda",
+    description: "Vlasnik postavlja rok; svi ponuđači dobijaju priliku da podnesu finalnu ponudu pre isteka. Nadgradnja na M7.",
+    jtbd: ["Prodavac #5"],
+  },
+  {
+    id: "C8",
+    title: "Notifikacije za ponude",
+    description: "Email vlasniku kad stigne nova ponuda, email kupcu kad njegova ponuda bude prihvaćena/odbijena. Čeka SMTP servis (isto ograničenje kao AD8).",
+    jtbd: ["Prodavac #5", "Kupac #5"],
+  },
 ];
 
 export const wontHave: string[] = [
   "Agenti/agencije kao tip naloga — eksplicitno isključeno, gradimo čist FSBO",
-  "Ugovori / e-potpis / pravna dokumentacija",
-  "Integrisano plaćanje kapare/pologa",
 ];
