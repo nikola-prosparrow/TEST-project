@@ -10,5 +10,5 @@ test("admin page renders roadmap, CI status, tech debt, and architecture section
   await expect(page.getByRole("heading", { name: "Arhitektonske odluke" })).toBeVisible();
 
   await expect(page.getByText("Baza podataka za oglase")).toBeVisible();
-  await expect(page.getByText("Nema autentikacije ni autorizacije")).toBeVisible();
+  await expect(page.getByText("Dugmad za kontakt ne rade")).toBeVisible();
 });

@@ -6,15 +6,17 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { MobileTabBar } from "@/components/MobileTabBar";
 import { HeartIcon, ShieldIcon } from "@/components/icons";
-import type { Listing } from "@/data/listings";
+import type { Listing } from "@/lib/listings/types";
+import type { CurrentUser } from "@/lib/auth";
+import { formatPrice, formatPricePerArea } from "@/lib/format";
+import { listingKicker } from "@/lib/listings/labels";
 
-export function ListingDetail({ listing }: { listing: Listing }) {
-  const [fav, setFav] = useState(!!listing.fav);
-  const { detail } = listing;
+export function ListingDetail({ listing, user }: { listing: Listing; user: CurrentUser | null }) {
+  const [fav, setFav] = useState(false);
 
   return (
     <div>
-      <SiteHeader showSaved={false} />
+      <SiteHeader showSaved={false} user={user} />
 
       <div className="wrap">
         <Link href="/" className="breadcrumb">
@@ -31,21 +33,6 @@ export function ListingDetail({ listing }: { listing: Listing }) {
             <path d="M4 11.5 12 4l8 7.5" />
             <path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9" />
           </svg>
-        </div>
-        <div className="gallery-thumbs">
-          <div className="gallery-thumb" style={{ background: "linear-gradient(135deg, rgba(242,136,74,0.1), rgba(214,65,127,0.1))" }}>
-            <svg viewBox="0 0 24 24" width={44} height={44} fill="none" stroke="#1D1D1F" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.16 }}>
-              <path d="M4 11.5 12 4l8 7.5" />
-              <path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9" />
-            </svg>
-          </div>
-          <div className="gallery-thumb" style={{ background: "linear-gradient(135deg, rgba(214,65,127,0.1), rgba(122,53,150,0.1))" }}>
-            <svg viewBox="0 0 24 24" width={44} height={44} fill="none" stroke="#1D1D1F" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.16 }}>
-              <path d="M4 11.5 12 4l8 7.5" />
-              <path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9" />
-            </svg>
-            <div className="gallery-more-overlay">+{Math.max(listing.photos - 2, 0)} foto</div>
-          </div>
         </div>
         <div className="gallery-actions">
           <button className="icon-btn" aria-label="Sačuvaj oglas" onClick={() => setFav((prev) => !prev)}>
@@ -65,7 +52,7 @@ export function ListingDetail({ listing }: { listing: Listing }) {
       <div className="wrap listing-body">
         <div>
           <div className="listing-kicker">
-            <span className="type">{detail.kicker}</span>
+            <span className="type">{listingKicker(listing.listingType, listing.propertyType)}</span>
             {listing.verified && (
               <>
                 <ShieldIcon size={15} />
@@ -79,46 +66,54 @@ export function ListingDetail({ listing }: { listing: Listing }) {
               <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" />
               <circle cx={12} cy={9} r={2.4} />
             </svg>
-            {detail.fullAddress}
+            {listing.address}
           </div>
 
           <div className="stat-row">
             <div className="stat-item">
-              <strong>{listing.area}</strong>
+              <strong>{listing.areaSqm} m²</strong>
               <span>Površina</span>
             </div>
             <div className="stat-item">
-              <strong>{listing.beds}</strong>
+              <strong>{listing.rooms}</strong>
               <span>Sobe</span>
             </div>
             <div className="stat-item">
-              <strong>{listing.baths}</strong>
+              <strong>{listing.bathrooms}</strong>
               <span>Kupatilo</span>
             </div>
-            <div className="stat-item">
-              <strong>{detail.floor}</strong>
-              <span>Sprat</span>
-            </div>
-            <div className="stat-item">
-              <strong>{detail.yearBuilt}</strong>
-              <span>Godina gradnje</span>
-            </div>
+            {listing.floor && (
+              <div className="stat-item">
+                <strong>{listing.floor}</strong>
+                <span>Sprat</span>
+              </div>
+            )}
+            {listing.yearBuilt && (
+              <div className="stat-item">
+                <strong>{listing.yearBuilt}</strong>
+                <span>Godina gradnje</span>
+              </div>
+            )}
           </div>
 
           <h2>O nekretnini</h2>
-          <p className="desc">{detail.description}</p>
+          <p className="desc">{listing.description}</p>
 
-          <h2>Karakteristike</h2>
-          <div className="feature-list">
-            {detail.features.map((feature) => (
-              <div key={feature} className="feature-item">
-                <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="#D6417F" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12l4 4L19 6" />
-                </svg>
-                {feature}
+          {listing.features.length > 0 && (
+            <>
+              <h2>Karakteristike</h2>
+              <div className="feature-list">
+                {listing.features.map((feature) => (
+                  <div key={feature} className="feature-item">
+                    <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="#D6417F" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12l4 4L19 6" />
+                    </svg>
+                    {feature}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
 
           <h2>Lokacija</h2>
           <div className="map-placeholder">
@@ -131,22 +126,14 @@ export function ListingDetail({ listing }: { listing: Listing }) {
 
         <div>
           <div className="sidebar-card">
-            <div className="sidebar-price">{listing.price}</div>
-            <div className="sidebar-permsqm">{detail.pricePerArea}</div>
-
-            <div className="agent-row">
-              <div className="agent-avatar">{detail.agentInitials}</div>
-              <div>
-                <div className="agent-name">{detail.agentName}</div>
-                <div className="agent-role">{detail.agentRole}</div>
-              </div>
-            </div>
+            <div className="sidebar-price">{formatPrice(listing)}</div>
+            <div className="sidebar-permsqm">{formatPricePerArea(listing)}</div>
 
             <button className="btn btn-primary btn-block">
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 5h16v11H8l-4 4V5z" />
               </svg>
-              Pošalji poruku
+              Pošalji poruku vlasniku
             </button>
             <button className="btn btn-secondary btn-block">Zakaži razgledanje</button>
             <button className="btn btn-secondary btn-block">

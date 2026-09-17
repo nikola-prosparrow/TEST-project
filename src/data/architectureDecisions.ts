@@ -3,6 +3,7 @@ export type ArchitectureDecision = {
   question: string;
   options: string[];
   recommendation: string;
+  decision?: string;
   status: "open" | "decided";
 };
 
@@ -16,16 +17,18 @@ export const architectureDecisions: ArchitectureDecision[] = [
       "PlanetScale (MySQL)",
     ],
     recommendation:
-      "Supabase — daje bazu, auth i file storage u jednom, manje pokretnih delova za mali tim. Smanjuje broj odluka (AD1+AD2+AD3 rešava odjednom).",
-    status: "open",
+      "Supabase — daje bazu, auth i file storage u jednom, manje pokretnih delova za mali tim.",
+    decision: "Supabase. Šema u supabase/migrations/0001_create_listings.sql, RLS uključen.",
+    status: "decided",
   },
   {
     id: "AD2",
     question: "Koji auth provider za naloge vlasnika?",
     options: ["Custom (ručno rolovan)", "Auth.js (NextAuth)", "Supabase Auth", "Clerk"],
     recommendation:
-      "Supabase Auth ako ide Supabase za bazu — ima ugrađenu verifikaciju telefona/emaila koja nam treba za \"Verifikovan oglas\" (Kupac JTBD #2). Ručno rolovan auth izbegavati na MVP-u — sigurnosni rizik bez dovoljno vremena za review.",
-    status: "open",
+      "Supabase Auth ako ide Supabase za bazu — ima ugrađenu verifikaciju telefona/emaila koja nam treba za \"Verifikovan oglas\" (Kupac JTBD #2).",
+    decision: "Supabase Auth, email + lozinka. Telefonska/email verifikacija za \"Verifikovan oglas\" još nije iskorišćena — to je S2.",
+    status: "decided",
   },
   {
     id: "AD3",
@@ -43,16 +46,18 @@ export const architectureDecisions: ArchitectureDecision[] = [
       "Zaseban REST/GraphQL API sloj",
     ],
     recommendation:
-      "Server Components — idiomatski za Next.js App Router, manje boilerplate-a za MVP obim. API sloj razmotriti tek ako se pojavi mobilna app ili treći klijent.",
-    status: "open",
+      "Server Components — idiomatski za Next.js App Router, manje boilerplate-a za MVP obim.",
+    decision: "Server Components. Home i listing detalj su async Server Components koji zovu repository sloj direktno.",
+    status: "decided",
   },
   {
     id: "AD5",
     question: "Kako se rade mutacije (postavljanje oglasa, slanje poruke)?",
     options: ["Server Actions", "Route Handlers (app/api/*)"],
     recommendation:
-      "Server Actions — manje koda za formulare, direktna integracija sa React formama koje već koristimo (npr. search-card).",
-    status: "open",
+      "Server Actions — manje koda za formulare, direktna integracija sa React formama.",
+    decision: "Server Actions (src/app/actions/). Koristi useActionState na klijentu za pending/error state.",
+    status: "decided",
   },
   {
     id: "AD6",
@@ -63,7 +68,9 @@ export const architectureDecisions: ArchitectureDecision[] = [
       "Kombinacija: unit testovi mock-uju, e2e ide na test bazu",
     ],
     recommendation:
-      "Kombinacija — brzi unit testovi sa mock-ovanim data-layer-om za TDD petlju, Playwright e2e ide na pravu (test) bazu za end-to-end poverenje. Odluka treba PRE početka M1, da TDD ostane primenjiv na backend kod.",
-    status: "open",
+      "Kombinacija — brzi unit testovi sa mock-ovanim data-layer-om za TDD petlju, Playwright e2e ide na pravu (test) bazu za end-to-end poverenje.",
+    decision:
+      "Pojednostavljeno u odnosu na preporuku: nemamo poseban Supabase test projekat (dodatni nalog), pa repository factory koristi in-memory implementaciju kad god NEXT_PUBLIC_SUPABASE_URL nije podešen — što pokriva i unit testove i e2e/CI (GitHub Actions nema Supabase secrets). Lokalni dev i produkcija koriste pravi Supabase. Rizik: e2e ne testira stvarnu Supabase integraciju (RLS, mrežne greške) — vredi razmotriti poseban test projekat kad se pojavi budžet/vreme.",
+    status: "decided",
   },
 ];

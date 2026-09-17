@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { signOutAction } from "@/app/actions/auth";
+import type { CurrentUser } from "@/lib/auth";
 
 function BrandLogo() {
   return (
@@ -25,7 +27,13 @@ function BrandLogo() {
   );
 }
 
-export function SiteHeader({ showSaved = true }: { showSaved?: boolean }) {
+export function SiteHeader({
+  showSaved = true,
+  user = null,
+}: {
+  showSaved?: boolean;
+  user?: CurrentUser | null;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -58,8 +66,27 @@ export function SiteHeader({ showSaved = true }: { showSaved?: boolean }) {
               Sačuvano
             </a>
           )}
-          <button className="btn btn-secondary">Prijavi se</button>
-          {showSaved && <button className="btn btn-primary">Postavi oglas</button>}
+          {user ? (
+            <>
+              <span className="nav-link" title={user.email}>
+                {user.email}
+              </span>
+              <form action={signOutAction}>
+                <button type="submit" className="btn btn-secondary">
+                  Odjavi se
+                </button>
+              </form>
+            </>
+          ) : (
+            <Link href="/prijava" className="btn btn-secondary">
+              Prijavi se
+            </Link>
+          )}
+          {showSaved && (
+            <Link href="/postavi-oglas" className="btn btn-primary">
+              Postavi oglas
+            </Link>
+          )}
         </div>
         <button className="nav-menu-btn" aria-label="Meni" onClick={() => setMenuOpen((prev) => !prev)}>
           <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">

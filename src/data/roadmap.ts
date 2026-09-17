@@ -3,32 +3,37 @@ export type RoadmapItem = {
   title: string;
   description: string;
   jtbd: string[];
+  done?: boolean;
 };
 
 export const roadmapNow: RoadmapItem[] = [
   {
     id: "M1",
     title: "Baza podataka za oglase",
-    description: "Zamena mock niza u src/data/listings.ts pravom bazom. Preduslov za sve ostalo.",
+    description: "Repository pattern (in-memory za testove/CI, Supabase Postgres za dev/produkciju). Mock niz je sad samo test fixture, ne produkcioni izvor podataka.",
     jtbd: ["Preduslov"],
+    done: true,
   },
   {
     id: "M2",
     title: "Nalog / login za vlasnike",
-    description: "Registracija i prijava vlasnika, potrebno da oglas bude vezan za nekog ko može da ga edituje/obriše.",
+    description: "Supabase Auth (email + lozinka). Registracija, prijava, odjava, oglas je vezan za owner_id.",
     jtbd: ["Preduslov"],
+    done: true,
   },
   {
     id: "M3",
     title: "Formular \"Postavi oglas\"",
-    description: "Tip nekretnine, lokacija, cena, opis, fotografije, kontakt.",
+    description: "Tip nekretnine, lokacija, cena, opis, karakteristike. Fotografije namerno izostavljene — to je S1.",
     jtbd: ["Prodavac #1"],
+    done: true,
   },
   {
     id: "M4",
     title: "Funkcionalna pretraga / filter",
-    description: "Polja na landing page-u trenutno ništa ne filtriraju. Treba da rade po gradu, tipu, ceni.",
+    description: "Pretraga po gradu, tipu nekretnine, ceni i tipu oglasa — sve preko URL query parametara (deljivi/bookmarkable rezultati), bez klijentskog JS-a.",
     jtbd: ["Kupac #1"],
+    done: true,
   },
   {
     id: "M5",

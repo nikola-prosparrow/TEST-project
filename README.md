@@ -2,7 +2,11 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Copy `.env.local.example` to `.env.local` and fill in your Supabase project's URL and publishable/anon key (Project Settings → API Keys). Without it, the app falls back to an in-memory mock listings repository — fine for UI work, but auth and posting listings won't persist.
+
+Run the SQL in `supabase/migrations/` (Supabase SQL Editor) once to create the `listings` table.
+
+Then, run the development server:
 
 ```bash
 npm run dev

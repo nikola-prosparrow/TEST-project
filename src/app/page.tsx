@@ -1,34 +1,62 @@
-"use client";
-
-import { useState } from "react";
+import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { MobileTabBar } from "@/components/MobileTabBar";
 import { ListingCard } from "@/components/ListingCard";
-import { listings } from "@/data/listings";
+import { getListingsRepository } from "@/lib/listings";
+import { getCurrentUser } from "@/lib/auth";
+import type { ListingType, PropertyType } from "@/lib/listings/types";
+import { PROPERTY_TYPE_LABELS, PROPERTY_TYPE_CHIP_LABELS } from "@/lib/listings/labels";
+import { buildSearchHref, type SearchParamsRecord } from "@/lib/searchHref";
 
-const CHIPS = [
-  { key: "stan", label: "Stanovi" },
-  { key: "kuca", label: "Kuće" },
-  { key: "posl", label: "Poslovni prostor" },
-  { key: "zemlj", label: "Zemljište" },
-  { key: "luks", label: "Luksuzno" },
-];
+const PROPERTY_TYPES = Object.keys(PROPERTY_TYPE_LABELS) as PropertyType[];
 
 const CITIES = [
-  { name: "Beograd", count: "2.481 nekretnina", gradient: "linear-gradient(135deg, #F2884A, #D6417F)" },
-  { name: "Novi Sad", count: "864 nekretnina", gradient: "linear-gradient(135deg, #D6417F, #7A3596)" },
-  { name: "Niš", count: "312 nekretnina", gradient: "linear-gradient(135deg, #F2884A, #7A3596)" },
-  { name: "Subotica", count: "128 nekretnina", gradient: "linear-gradient(135deg, #7A3596, #D6417F)" },
+  { name: "Beograd", gradient: "linear-gradient(135deg, #F2884A, #D6417F)" },
+  { name: "Novi Sad", gradient: "linear-gradient(135deg, #D6417F, #7A3596)" },
+  { name: "Niš", gradient: "linear-gradient(135deg, #F2884A, #7A3596)" },
+  { name: "Subotica", gradient: "linear-gradient(135deg, #7A3596, #D6417F)" },
 ];
 
-export default function Home() {
-  const [activeTab, setActiveTab] = useState<"buy" | "rent">("buy");
-  const [activeChip, setActiveChip] = useState("stan");
+function isPropertyType(value: string | undefined): value is PropertyType {
+  return !!value && (PROPERTY_TYPES as string[]).includes(value);
+}
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const rawParams = await searchParams;
+  const get = (key: string) => {
+    const value = rawParams[key];
+    return typeof value === "string" && value ? value : undefined;
+  };
+
+  const listingTypeParam = get("listingType");
+  const listingType: ListingType | undefined =
+    listingTypeParam === "rent" ? "rent" : listingTypeParam === "sale" ? "sale" : undefined;
+  const city = get("city");
+  const propertyType = isPropertyType(get("propertyType")) ? (get("propertyType") as PropertyType) : undefined;
+  const maxPriceRaw = get("maxPrice");
+  const maxPrice = maxPriceRaw && !Number.isNaN(Number(maxPriceRaw)) ? Number(maxPriceRaw) : undefined;
+
+  const current: SearchParamsRecord = {
+    listingType,
+    city,
+    propertyType,
+    maxPrice: maxPriceRaw,
+  };
+
+  const repo = await getListingsRepository();
+  const [listings, user] = await Promise.all([
+    repo.list({ listingType, city, propertyType, maxPrice }),
+    getCurrentUser(),
+  ]);
 
   return (
     <div>
-      <SiteHeader />
+      <SiteHeader user={user} />
 
       <section className="hero">
         <div className="hero-glow" />
@@ -44,30 +72,29 @@ export default function Home() {
             Provereni oglasi, jasne cene, bez sitnih slova. Pretraga koja stvarno ide brzo.
           </p>
 
-          <form className="search-card" onSubmit={(e) => e.preventDefault()}>
+          <form className="search-card" method="GET" action="/">
             <div className="search-tabs">
-              <button
-                type="button"
-                className={`tab-btn${activeTab === "buy" ? " active" : ""}`}
-                onClick={() => setActiveTab("buy")}
+              <Link
+                href={buildSearchHref(current, { listingType: "sale" })}
+                className={`tab-btn${listingType === "sale" ? " active" : ""}`}
               >
                 Kupovina
-              </button>
-              <button
-                type="button"
-                className={`tab-btn${activeTab === "rent" ? " active" : ""}`}
-                onClick={() => setActiveTab("rent")}
+              </Link>
+              <Link
+                href={buildSearchHref(current, { listingType: "rent" })}
+                className={`tab-btn${listingType === "rent" ? " active" : ""}`}
               >
                 Izdavanje
-              </button>
+              </Link>
             </div>
+            <input type="hidden" name="listingType" value={listingType} />
             <div className="search-row">
               <div className="search-field">
                 <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#6E6E73" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" />
                   <circle cx={12} cy={9} r={2.4} />
                 </svg>
-                <input type="text" placeholder="Grad, opština ili naselje" />
+                <input type="text" name="city" placeholder="Grad, opština ili naselje" defaultValue={city ?? ""} />
               </div>
               <div className="search-divider" />
               <div className="search-field">
@@ -75,11 +102,24 @@ export default function Home() {
                   <path d="M4 11.5 12 4l8 7.5" />
                   <path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9" />
                 </svg>
-                <span>Tip nekretnine</span>
+                <select name="propertyType" defaultValue={propertyType ?? ""}>
+                  <option value="">Tip nekretnine</option>
+                  {PROPERTY_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {PROPERTY_TYPE_LABELS[type]}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="search-divider" />
               <div className="search-field">
-                <span>Cena</span>
+                <input
+                  type="number"
+                  name="maxPrice"
+                  placeholder="Cena do (€)"
+                  min={0}
+                  defaultValue={maxPriceRaw ?? ""}
+                />
               </div>
               <button type="submit" className="btn btn-primary">
                 <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} strokeLinecap="round">
@@ -92,12 +132,12 @@ export default function Home() {
           </form>
 
           <div className="hero-actions">
-            <button className="btn btn-primary">
+            <Link href="/postavi-oglas" className="btn btn-primary">
               Postavi oglas
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 6l6 6-6 6" />
               </svg>
-            </button>
+            </Link>
             <button className="btn btn-secondary">Kako radimo</button>
           </div>
         </div>
@@ -105,33 +145,38 @@ export default function Home() {
 
       <div className="wrap">
         <div className="chips-row">
-          {CHIPS.map((chip) => (
-            <button
-              key={chip.key}
-              className={`chip${activeChip === chip.key ? " active" : ""}`}
-              onClick={() => setActiveChip(chip.key)}
+          <Link
+            href={buildSearchHref(current, { propertyType: undefined })}
+            className={`chip${!propertyType ? " active" : ""}`}
+          >
+            Sve
+          </Link>
+          {PROPERTY_TYPES.map((type) => (
+            <Link
+              key={type}
+              href={buildSearchHref(current, { propertyType: type })}
+              className={`chip${propertyType === type ? " active" : ""}`}
             >
-              {chip.label}
-            </button>
+              {PROPERTY_TYPE_CHIP_LABELS[type]}
+            </Link>
           ))}
         </div>
       </div>
 
       <section className="wrap section">
         <div className="section-head">
-          <h2>Izdvojeno za tebe</h2>
-          <a href="#" className="section-link">
-            Pogledaj sve
-            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </a>
+          <h2>{city || propertyType || maxPrice ? "Rezultati pretrage" : "Izdvojeno za tebe"}</h2>
+          <span className="section-link">{listings.length} {listings.length === 1 ? "oglas" : "oglasa"}</span>
         </div>
-        <div className="listing-grid">
-          {listings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
-          ))}
-        </div>
+        {listings.length > 0 ? (
+          <div className="listing-grid">
+            {listings.map((listing) => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-zinc-500">Nema oglasa koji odgovaraju pretrazi. Probaj druge filtere.</p>
+        )}
       </section>
 
       <section className="city-section">
@@ -140,14 +185,18 @@ export default function Home() {
             <h2>Pretraži po gradu</h2>
           </div>
           <div className="city-grid">
-            {CITIES.map((city) => (
-              <a key={city.name} className="city-card" href="#" style={{ background: city.gradient }}>
+            {CITIES.map((cityOption) => (
+              <Link
+                key={cityOption.name}
+                className="city-card"
+                href={buildSearchHref(current, { city: cityOption.name })}
+                style={{ background: cityOption.gradient }}
+              >
                 <div className="overlay" />
                 <div className="label">
-                  <strong>{city.name}</strong>
-                  <span>{city.count}</span>
+                  <strong>{cityOption.name}</strong>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -192,9 +241,9 @@ export default function Home() {
             <p>Postavi oglas besplatno za 5 minuta i stigni do hiljada zainteresovanih kupaca.</p>
           </div>
           <div className="cta-buttons">
-            <button className="btn" style={{ background: "#fff", color: "#1D1D1F" }}>
+            <Link href="/postavi-oglas" className="btn" style={{ background: "#fff", color: "#1D1D1F" }}>
               Postavi oglas
-            </button>
+            </Link>
             <button className="btn btn-ghost">Saznaj više</button>
           </div>
         </div>

@@ -19,13 +19,16 @@ function RoadmapColumn({
       </div>
       <div className="flex flex-col gap-3">
         {items.map((item) => (
-          <div key={item.id} className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
+          <div
+            key={item.id}
+            className={`rounded-xl border p-4 shadow-sm ${item.done ? "border-emerald-200 bg-emerald-50" : "border-zinc-200 bg-white"}`}
+          >
             <div className="flex items-center justify-between gap-2 mb-1.5">
               <span
                 className="inline-block rounded-full px-2 py-0.5 text-[11px] font-bold text-white"
-                style={{ background: accent }}
+                style={{ background: item.done ? "#1FA97A" : accent }}
               >
-                {item.id}
+                {item.done ? `${item.id} ✓` : item.id}
               </span>
               <span className="text-[11px] text-zinc-400">{item.jtbd.join(", ")}</span>
             </div>

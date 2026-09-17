@@ -8,32 +8,11 @@ export type TechDebtItem = {
 
 export const techDebt: TechDebtItem[] = [
   {
-    id: "TD1",
-    title: "Svi podaci su hardkodovani mock podaci",
-    description: "src/data/listings.ts je statički niz u kodu, ne baza. Svaka izmena zahteva deploy.",
-    severity: "high",
-    blocks: "M1",
-  },
-  {
-    id: "TD2",
-    title: "Pretraga na landing page-u je dekorativna",
-    description: "Polja za grad/tip/cenu ne filtriraju listing-grid — samo vizuelno postoje.",
-    severity: "high",
-    blocks: "M4",
-  },
-  {
     id: "TD3",
     title: "Dugmad za kontakt ne rade",
     description: "\"Pošalji poruku\", \"Zakaži razgledanje\", \"Prikaži broj telefona\" nemaju funkcionalnost.",
     severity: "high",
     blocks: "M5",
-  },
-  {
-    id: "TD4",
-    title: "Nema autentikacije ni autorizacije",
-    description: "Nema naloga, nema pojma ko je vlasnik kog oglasa. Preduslov za M2, M3, S3, S4.",
-    severity: "high",
-    blocks: "M2",
   },
   {
     id: "TD5",
@@ -45,16 +24,15 @@ export const techDebt: TechDebtItem[] = [
   {
     id: "TD6",
     title: "Nema uploada fotografija",
-    description: "Galerija oglasa je placeholder ikonica, ne prave slike.",
+    description: "Galerija oglasa je placeholder ikonica, ne prave slike. Formular za postavljanje oglasa (M3) namerno ne traži fotografije — to je S1.",
     severity: "medium",
     blocks: "S1",
   },
   {
     id: "TD7",
     title: "/admin stranica nema autentikaciju",
-    description: "Trenutno je dostupna svakom ko zna URL. Treba je zaštititi čim M2 (auth) bude gotov.",
+    description: "Auth (M2) je sad gotov, pa se ovo lako rešava vezivanjem za konkretan nalog vlasnika — samo još nije urađeno.",
     severity: "high",
-    blocks: "M2",
   },
   {
     id: "TD8",
@@ -63,10 +41,15 @@ export const techDebt: TechDebtItem[] = [
     severity: "low",
   },
   {
-    id: "TD9",
-    title: "Nema environment/secrets management setup-a",
-    description: "Kad dodamo bazu i auth, trebaće .env konvencija i Vercel Environment Variables — nije još definisano.",
+    id: "TD10",
+    title: "Nema rate-limitinga na formularu za oglase",
+    description: "Bilo koji prijavljeni nalog trenutno može da postavi neograničen broj oglasa bez ograničenja — otvoreno za spam.",
     severity: "medium",
-    blocks: "M1",
+  },
+  {
+    id: "TD11",
+    title: "Supabase env varijable nisu još u Vercel-u",
+    description: "NEXT_PUBLIC_SUPABASE_URL i NEXT_PUBLIC_SUPABASE_ANON_KEY su samo u lokalnom .env.local. Dok se ne dodaju u Vercel Environment Variables, produkcija radi na in-memory mock podacima.",
+    severity: "high",
   },
 ];

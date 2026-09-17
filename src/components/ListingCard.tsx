@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Listing } from "@/data/listings";
+import type { Listing } from "@/lib/listings/types";
+import { formatPrice } from "@/lib/format";
 import {
   HeartIcon,
   ShieldIcon,
   HouseIcon,
-  CameraIcon,
   BedIcon,
   BathIcon,
   AreaIcon,
 } from "@/components/icons";
 
 export function ListingCard({ listing }: { listing: Listing }) {
-  const [fav, setFav] = useState(!!listing.fav);
+  const [fav, setFav] = useState(false);
 
   return (
     <Link href={`/listing/${listing.id}`} className="card">
@@ -31,30 +31,26 @@ export function ListingCard({ listing }: { listing: Listing }) {
         >
           <HeartIcon active={fav} />
         </button>
-        <div className="photo-count">
-          <CameraIcon />
-          {listing.photos}
-        </div>
       </div>
       <div className="card-body">
         <div className="card-top">
-          <span className="card-price">{listing.price}</span>
+          <span className="card-price">{formatPrice(listing)}</span>
           {listing.verified && <ShieldIcon />}
         </div>
         <div className="card-title">{listing.title}</div>
-        <div className="card-addr">{listing.addr}</div>
+        <div className="card-addr">{listing.city}</div>
         <div className="card-stats">
           <span>
             <BedIcon />
-            {listing.beds}
+            {listing.rooms}
           </span>
           <span>
             <BathIcon />
-            {listing.baths}
+            {listing.bathrooms}
           </span>
           <span>
             <AreaIcon />
-            {listing.area}
+            {listing.areaSqm} m²
           </span>
         </div>
       </div>

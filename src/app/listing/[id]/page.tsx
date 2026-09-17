@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getListing, listings } from "@/data/listings";
+import { getListingsRepository } from "@/lib/listings";
 import { ListingDetail } from "@/components/ListingDetail";
-
-export function generateStaticParams() {
-  return listings.map((listing) => ({ id: listing.id }));
-}
+import { formatPrice } from "@/lib/format";
+import { getCurrentUser } from "@/lib/auth";
 
 export async function generateMetadata({
   params,
@@ -13,12 +11,13 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const listing = getListing(id);
+  const repo = await getListingsRepository();
+  const listing = await repo.getById(id);
   if (!listing) return {};
 
   return {
-    title: `${listing.title} — ${listing.addr} | ProSparrow`,
-    description: `${listing.title}, ${listing.detail.fullAddress}. ${listing.area}, ${listing.beds} soba, ${listing.price}.`,
+    title: `${listing.title} — ${listing.city} | ProSparrow`,
+    description: `${listing.title}, ${listing.address}. ${listing.areaSqm} m², ${listing.rooms} soba, ${formatPrice(listing)}.`,
   };
 }
 
@@ -28,8 +27,9 @@ export default async function ListingPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const listing = getListing(id);
+  const repo = await getListingsRepository();
+  const [listing, user] = await Promise.all([repo.getById(id), getCurrentUser()]);
   if (!listing) notFound();
 
-  return <ListingDetail listing={listing} />;
+  return <ListingDetail listing={listing} user={user} />;
 }

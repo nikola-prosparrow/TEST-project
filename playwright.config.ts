@@ -76,5 +76,12 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    // Force the in-memory listings repository for e2e, even when a local
+    // .env.local points at a real Supabase project — keeps e2e hermetic
+    // and matches the fixed seed data the tests assert against (AD6).
+    env: {
+      NEXT_PUBLIC_SUPABASE_URL: '',
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: '',
+    },
   },
 });
