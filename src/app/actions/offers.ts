@@ -70,16 +70,43 @@ export async function updateOfferStatusAction(
     return { transactionId: null };
   }
 
+  return ensureTransaction(offer);
+}
+
+async function ensureTransaction(offer: {
+  id: string;
+  listingId: string;
+  ownerId: string;
+  bidderId: string;
+}): Promise<{ transactionId: string | null }> {
   const transactionsRepo = await getTransactionsRepository();
-  const existing = await transactionsRepo.getByOfferId(offerId);
+  const existing = await transactionsRepo.getByOfferId(offer.id);
   if (existing) {
     return { transactionId: existing.id };
   }
   const transaction = await transactionsRepo.createForOffer(
-    offerId,
+    offer.id,
     offer.listingId,
     offer.ownerId,
     offer.bidderId,
   );
   return { transactionId: transaction.id };
+}
+
+// Recovery path for offers that were accepted before the transactions
+// table existed (or any other partial failure) — lets the owner create
+// the missing transaction after the fact instead of being stuck.
+export async function ensureTransactionForOfferAction(
+  offerId: string,
+): Promise<{ transactionId: string | null }> {
+  const user = await getCurrentUser();
+  if (!user) redirect("/prijava");
+
+  const repo = await getOffersRepository();
+  const offer = await repo.getById(offerId);
+  if (!offer || offer.ownerId !== user.id || offer.status !== "accepted") {
+    return { transactionId: null };
+  }
+
+  return ensureTransaction(offer);
 }

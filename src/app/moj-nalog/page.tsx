@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { MobileTabBar } from "@/components/MobileTabBar";
 import { ListingCard } from "@/components/ListingCard";
 import { OfferActions } from "@/components/OfferActions";
+import { EnsureTransactionButton } from "@/components/EnsureTransactionButton";
 import { getCurrentUser } from "@/lib/auth";
 import { getListingsRepository } from "@/lib/listings";
 import { getMessagesRepository } from "@/lib/messages";
@@ -110,7 +111,7 @@ export default async function MyAccountPage() {
                 </Link>
                 {offer.message && <p className="offer-message">{offer.message}</p>}
                 {offer.status === "pending" && <OfferActions offerId={offer.id} />}
-                {transactionIdByOfferId.has(offer.id) && (
+                {offer.status === "accepted" && transactionIdByOfferId.has(offer.id) && (
                   <Link
                     href={`/transakcija/${transactionIdByOfferId.get(offer.id)}`}
                     className="btn btn-secondary"
@@ -118,6 +119,9 @@ export default async function MyAccountPage() {
                   >
                     Otvori transakciju
                   </Link>
+                )}
+                {offer.status === "accepted" && !transactionIdByOfferId.has(offer.id) && (
+                  <EnsureTransactionButton offerId={offer.id} />
                 )}
               </div>
             ))}
