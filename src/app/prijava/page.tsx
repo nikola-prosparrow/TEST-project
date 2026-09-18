@@ -23,6 +23,11 @@ export default async function SignInPage({
         mode="signin"
         action={signInAction}
         successMessage={sp.registrovan ? "Uspešno si registrovan/na — sad se prijavi." : undefined}
+        errorMessage={
+          sp.potvrda === "neuspesna"
+            ? "Link za potvrdu emaila nije važeći ili je istekao. Probaj da se prijaviš — ako je email već potvrđen, radiće."
+            : undefined
+        }
         next={next}
       />
       <SiteFooter />

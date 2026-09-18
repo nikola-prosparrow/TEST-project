@@ -10,11 +10,13 @@ export function AuthForm({
   mode,
   action,
   successMessage,
+  errorMessage,
   next,
 }: {
   mode: "signin" | "signup";
   action: (state: AuthActionState, formData: FormData) => Promise<AuthActionState>;
   successMessage?: string;
+  errorMessage?: string;
   next?: string;
 }) {
   const [state, formAction, pending] = useActionState(action, INITIAL_STATE);
@@ -30,6 +32,7 @@ export function AuthForm({
         </p>
 
         {successMessage && <div className="auth-success">{successMessage}</div>}
+        {errorMessage && <div className="auth-error">{errorMessage}</div>}
         {state.error && <div className="auth-error">{state.error}</div>}
 
         <form action={formAction}>

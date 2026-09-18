@@ -1,12 +1,20 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 export type AuthActionState = { error: string | null };
 
 const NOT_CONFIGURED_ERROR =
   "Nalozi trenutno nisu dostupni (Supabase nije podešen u ovom okruženju).";
+
+async function getOrigin(): Promise<string> {
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "localhost:3000";
+  const protocol = host.startsWith("localhost") ? "http" : "https";
+  return `${protocol}://${host}`;
+}
 
 export async function signInAction(
   _prevState: AuthActionState,
@@ -55,8 +63,13 @@ export async function signUpAction(
     return { error: "Lozinka mora imati bar 8 karaktera." };
   }
 
+  const origin = await getOrigin();
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: `${origin}/auth/confirm` },
+  });
 
   if (error) {
     return { error: error.message };
