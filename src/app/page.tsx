@@ -69,10 +69,11 @@ export default async function Home({
             Kupovina · Izdavanje · Novogradnja
           </div>
           <h1>
-            Pronađi dom koji ti <em>sedne</em>.
+            Nekretnine bez <em>posrednika</em>.
           </h1>
           <p className="lead">
-            Provereni oglasi, jasne cene, bez sitnih slova. Pretraga koja stvarno ide brzo.
+            Kupuj i prodaj direktno od vlasnika. Bez provizije agenciji. Bez skrivenih troškova.
+            Samo oglas, kontakt i dogovor.
           </p>
 
           <form className="search-card" method="GET" action="/">

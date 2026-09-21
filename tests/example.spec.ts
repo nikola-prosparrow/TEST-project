@@ -5,7 +5,7 @@ test("home page loads with expected title and heading", async ({ page }) => {
 
   await expect(page).toHaveTitle(/ProSparrow/);
   await expect(
-    page.getByRole("heading", { level: 1, name: /pronađi dom koji ti sedne/i }),
+    page.getByRole("heading", { level: 1, name: /nekretnine bez posrednika/i }),
   ).toBeVisible();
 });
 

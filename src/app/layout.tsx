@@ -3,9 +3,9 @@ import "./globals.css";
 import "./prosparrow.css";
 
 export const metadata: Metadata = {
-  title: "ProSparrow — Pronađi dom koji ti sedne",
+  title: "ProSparrow — Nekretnine bez posrednika",
   description:
-    "ProSparrow — provereni oglasi nekretnina, jasne cene, pretraga koja stvarno ide brzo.",
+    "Kupuj i prodaj nekretnine direktno od vlasnika. Bez provizije agenciji, bez skrivenih troškova — samo oglas, kontakt i dogovor.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
